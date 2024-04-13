@@ -1,6 +1,7 @@
 // TODO: Refinar as funções, pois todas estão como parciais
 // TODO: Analisar clientHasSolicitation, se deve ser feito com SOLICITATION ou de outra forma
 // COMENTARIO:Nao precisa remover os conjuntos, so nao pode ter dados abstratos na interface das operacoes
+// TESTE
 
 MACHINE
     Gym
