@@ -31,7 +31,7 @@ INVARIANT
     
     & clientHasWorkout : clients +-> WORKOUT
     & clientWorkedOut : clients +-> WORKOUT
-    & workoutHasExercise : WORKOUT <-> EXERCISE // TODO: verificar com Marcel se pode (acredito que sim)
+    & workoutHasExercise : workouts <-> exercises // TODO: verificar com Marcel se pode (acredito que sim)
     & exerciseHasCategory : exercises --> CATEGORY
     & clientHasSolicitation : clients --> SOLICITATION
     
@@ -49,7 +49,6 @@ INITIALISATION
     || clientHasSolicitation := {}
     
 OPERATIONS 
-       // fazer a operação
         addClient(client) =
         PRE client : CLIENT
             & client /: clients
@@ -63,14 +62,17 @@ OPERATIONS
         THEN clients := {}
         END;
         
-        // fazer a operação
+        // PENSAR: addWorkout pode receber exercicios ainda nao cadastrados e adiciona-los a lista de exercicios?
         addWorkout(workout, exPush, exPull, exLeg) =
         PRE workout : WORKOUT
+            & workout /: workouts
             & exPush : EXERCISE & exPull : EXERCISE & exLeg : EXERCISE
             & exPush : exercises & exerciseHasCategory[{exPush}] = {PUSH}
             & exPull : exercises & exerciseHasCategory[{exPull}] = {PULL}
             & exLeg : exercises & exerciseHasCategory[{exLeg}] = {LEGS}
-        THEN workouts := {}
+        THEN workouts := workouts \/ {workout}
+            || workoutHasExercise := workoutHasExercise 
+                                        \/ {workout |-> exPush, workout |-> exPull, workout |-> exLeg}
         END;
         
         // fazer a operação
@@ -79,7 +81,6 @@ OPERATIONS
         THEN workouts := {}
         END;
         
-        // fazer a operação
         addExercise(exercise, category) =
         PRE exercise : EXERCISE
             & category : CATEGORY
