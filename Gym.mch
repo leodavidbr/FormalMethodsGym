@@ -56,10 +56,13 @@ OPERATIONS
             || clientHasSolicitation  := clientHasSolicitation \/ {client |-> YES}
         END;
         
-        // fazer a operação
+        // TODO: verificar se esta correto.
         removeClient(client) =
-        PRE client : CLIENT
-        THEN clients := {}
+        PRE client : CLIENT & client : clients
+        THEN clients := clients - {client}
+            || clientHasSolicitation := {client} <<| clientHasSolicitation
+            || clientHasWorkout := {client} <<| clientHasWorkout
+            || clientWorkedOut := {client} <<| clientWorkedOut
         END;
         
         // PENSAR: addWorkout pode receber exercicios ainda nao cadastrados e adiciona-los a lista de exercicios?
@@ -113,10 +116,12 @@ OPERATIONS
         THEN clients := {}
         END;
         
-        // fazer a operação
-        defineClientWorkout(client) =
-        PRE client : CLIENT
-        THEN clients := {}
+        // VERIFICAR: se no doc define que so pode ser definido o treino se houver solicitacao? Acho que eh bom ser assim
+        defineClientWorkout(client, workout) =
+        PRE client : CLIENT & workout : WORKOUT
+            & client : clients & workout : workouts
+            & clientHasSolicitation(client) = YES
+        THEN clientHasWorkout(client) := workout
         END;
         
         // fazer a operação
