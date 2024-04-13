@@ -1,0 +1,123 @@
+THEORY BalanceX IS
+Gym,29,0,0,8,0,2,0;
+Initialisation,4,0,0,4,0,0,0;
+Operation_addClient,4,0,0,3,0,1,0;
+Operation_addExercise,2,0,0,1,0,1,0;
+Operation_askForWorkout,3,0,0,0,0,0,0;
+Operation_defineClientWorkout,3,0,0,0,0,0,0;
+Operation_getClientsWithWorkoutSolicitations,3,0,0,0,0,0,0;
+Operation_getWorkoutLog,3,0,0,0,0,0,0;
+Operation_goToNextDay,3,0,0,0,0,0,0;
+Operation_removeClient,3,0,0,0,0,0,0;
+Operation_removeExercise,1,0,0,0,0,0,0
+END
+&
+THEORY ProofState IS
+Unproved;
+Unproved;
+Unproved;
+Unproved;
+Unproved;
+Unproved;
+Unproved;
+Unproved;
+Unproved;
+Unproved;
+Unproved;
+Unproved;
+Unproved;
+Unproved;
+Unproved;
+Unproved;
+Proved(2);
+Proved(0);
+Unproved;
+Unproved;
+Unproved;
+Proved(2);
+Proved(0);
+Proved(0);
+Proved(0);
+Proved(0);
+Proved(0);
+Proved(0);
+Proved(0)
+END
+&
+THEORY MethodList IS
+?;
+?;
+?;
+?;
+?;
+?;
+?;
+?;
+?;
+?;
+?;
+?;
+?;
+?;
+?;
+?;
+pr;
+pr;
+?;
+?;
+?;
+pr;
+pr;
+pr;
+pr;
+pr;
+pr;
+pr;
+pr
+END
+&
+THEORY PassList IS
+Force(0),(?; 0; 1; 2; 3);
+Force(0),(?; 0; 1; 2; 3);
+Force(0),(?; 0; 1; 2; 3);
+Force(0),(?; 0; 1; 2; 3);
+Force(0),(?; 0; 1; 2; 3);
+Force(0),(?; 0; 1; 2; 3);
+Force(0),(?; 0; 1; 2; 3);
+Force(0),(?; 0; 1; 2; 3);
+Force(0),(?; 0; 1; 2; 3);
+Force(0),(?; 0; 1; 2; 3);
+Force(0),(?; 0; 1; 2; 3);
+Force(0),(?; 0; 1; 2; 3);
+Force(0),(?; 0; 1; 2; 3);
+Force(0),(?; 0; 1; 2; 3);
+Force(0),(?; 0; 1; 2; 3);
+Force(0),(?; 0; 1; 2; 3);
+Force(2),(?; 0; 1);
+Force(0),?;
+Force(0),(?; 0; 1; 2; 3);
+Force(0),(?; 0; 1; 2; 3);
+Force(0),(?; 0; 1; 2; 3);
+Force(2),(?; 0; 1);
+Force(0),?;
+Force(0),?;
+Force(0),?;
+Force(0),?;
+Force(0),?;
+Force(0),?;
+Force(0),?
+END
+&
+THEORY Status IS
+Gym,29,0,10,0,0,0;
+Initialisation,4,0,4,0,0,0;
+Operation_addClient,4,0,4,0,0,0;
+Operation_addExercise,2,0,2,0,0,0;
+Operation_askForWorkout,3,0,0,0,0,0;
+Operation_defineClientWorkout,3,0,0,0,0,0;
+Operation_getClientsWithWorkoutSolicitations,3,0,0,0,0,0;
+Operation_getWorkoutLog,3,0,0,0,0,0;
+Operation_goToNextDay,3,0,0,0,0,0;
+Operation_removeClient,3,0,0,0,0,0;
+Operation_removeExercise,1,0,0,0,0,0
+END

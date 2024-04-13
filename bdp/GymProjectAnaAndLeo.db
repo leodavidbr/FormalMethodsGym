@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<db_xml>
+    <atelierb version="3_7_ubuntu-cvs" />
+    <project decomp_dir="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\expand_src" old_decomp_dir="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\src">
+        <!-- Definition directory list -->
+        <!-- Proof mechanisms -->
+        <!-- Component file list -->
+        <component_file path="G:/Other computers/Meu laptop/Drive/UFRN/UFRN7/METODOS_FORMAIS/Exercicios/GymProjectAnaAndLeo" name="Gym" suffix="mch" user="rbdiv">
+            <component name="Gym" type="specification" />
+        </component_file>
+    </project>
+</db_xml>

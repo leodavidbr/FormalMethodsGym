@@ -1,0 +1,64 @@
+THEORY ProofList IS
+_f(1) & _f(2) & _f(8) & Operation_goToNextDay.3,(_f(3) => _f(17));
+_f(1) & _f(2) & _f(8) & Operation_goToNextDay.2,(_f(3) => _f(16));
+_f(1) & _f(2) & _f(8) & Operation_goToNextDay.1,(_f(3) => _f(15));
+_f(1) & _f(2) & _f(8) & _f(9) & Operation_defineClientWorkout.3,(_f(3) => _f(17));
+_f(1) & _f(2) & _f(8) & _f(9) & Operation_defineClientWorkout.2,(_f(3) => _f(16));
+_f(1) & _f(2) & _f(8) & _f(9) & Operation_defineClientWorkout.1,(_f(3) => _f(15));
+_f(1) & _f(2) & _f(8) & _f(25) & Operation_getClientsWithWorkoutSolicitations.3,(_f(3) => _f(17));
+_f(1) & _f(2) & _f(8) & _f(25) & Operation_getClientsWithWorkoutSolicitations.2,(_f(3) => _f(16));
+_f(1) & _f(2) & _f(8) & _f(25) & Operation_getClientsWithWorkoutSolicitations.1,(_f(3) => _f(15));
+_f(1) & _f(2) & _f(8) & _f(9) & Operation_askForWorkout.3,(_f(3) => _f(17));
+_f(1) & _f(2) & _f(8) & _f(9) & Operation_askForWorkout.2,(_f(3) => _f(16));
+_f(1) & _f(2) & _f(8) & _f(9) & Operation_askForWorkout.1,(_f(3) => _f(15));
+_f(1) & _f(2) & _f(8) & _f(9) & _f(24) & Operation_getWorkoutLog.3,(_f(3) => _f(17));
+_f(1) & _f(2) & _f(8) & _f(9) & _f(24) & Operation_getWorkoutLog.2,(_f(3) => _f(16));
+_f(1) & _f(2) & _f(8) & _f(9) & _f(24) & Operation_getWorkoutLog.1,(_f(3) => _f(15));
+_f(1) & _f(2) & _f(8) & _f(18) & Operation_removeExercise.1,(_f(3) => _f(23));
+_f(1) & _f(2) & _f(8) & _f(18) & _f(19) & _f(20) & Operation_addExercise.2,(_f(3) => _f(22));
+_f(1) & _f(2) & _f(8) & _f(18) & _f(19) & _f(20) & Operation_addExercise.1,(_f(3) => _f(21));
+_f(1) & _f(2) & _f(8) & _f(9) & Operation_removeClient.3,(_f(3) => _f(17));
+_f(1) & _f(2) & _f(8) & _f(9) & Operation_removeClient.2,(_f(3) => _f(16));
+_f(1) & _f(2) & _f(8) & _f(9) & Operation_removeClient.1,(_f(3) => _f(15));
+_f(1) & _f(2) & _f(8) & _f(9) & _f(10) & Operation_addClient.4,(_f(3) => _f(14));
+_f(1) & _f(2) & _f(8) & _f(9) & _f(10) & Operation_addClient.3,(_f(3) => _f(13));
+_f(1) & _f(2) & _f(8) & _f(9) & _f(10) & Operation_addClient.2,(_f(3) => _f(12));
+_f(1) & _f(2) & _f(8) & _f(9) & _f(10) & Operation_addClient.1,(_f(3) => _f(11));
+_f(1) & _f(2) & Initialisation.4,(_f(3) => _f(7));
+_f(1) & _f(2) & Initialisation.3,(_f(3) => _f(6));
+_f(1) & _f(2) & Initialisation.2,(_f(3) => _f(5));
+_f(1) & _f(2) & Initialisation.1,(_f(3) => _f(4))
+END
+&
+THEORY Formulas IS
+((NAT) = (((0) .. (2147483647)))) & ((INT) = (((-2147483647) .. (2147483647))));
+CLIENT: FIN(INTEGER) & not(CLIENT = {}) & WORKOUT: FIN(INTEGER) & not(WORKOUT = {}) & EXERCISE: FIN(INTEGER) & not(EXERCISE = {}) & ((1..3)*{CATEGORY}): FIN(NATURAL*{CATEGORY})& not(((1..3)*{CATEGORY}) = {}) & ((1..2)*{SOLICITATION}): FIN(NATURAL*{SOLICITATION})& not(((1..2)*{SOLICITATION}) = {});
+"Invariant is preserved";
+(({}) : ((({}) +-> (WORKOUT))));
+(({}) : (((WORKOUT) <-> (EXERCISE))));
+(({}) : ((({}) --> (((1..3)*{CATEGORY})))));
+(({}) : ((({}) --> (((1..2)*{SOLICITATION})))));
+((timeInDays) : (INTEGER)) & clients : POW( CLIENT) & workouts : POW( WORKOUT) & exercises : POW( EXERCISE) & ((clientHasWorkout) : (((clients) +-> (WORKOUT)))) & ((clientWorkedOut) : (((clients) +-> (WORKOUT)))) & ((workoutHasExercise) : (((WORKOUT) <-> (EXERCISE)))) & exerciseHasCategory : exercises +-> ((1..3)*{CATEGORY}) & dom(exerciseHasCategory) = exercises & ((exerciseHasCategory) : (((exercises) --> (((1..3)*{CATEGORY}))))) & clientHasSolicitation : clients +-> ((1..2)*{SOLICITATION}) & dom(clientHasSolicitation) = clients & ((clientHasSolicitation) : (((clients) --> (((1..2)*{SOLICITATION})))));
+((client) : (CLIENT));
+not(((client) : (clients)));
+((clients) \/ (({client}))) : POW( CLIENT);
+((clientHasWorkout) : (((((clients) \/ (({client})))) +-> (WORKOUT))));
+((clientWorkedOut) : (((((clients) \/ (({client})))) +-> (WORKOUT))));
+((((clientHasSolicitation) \/ (({((client) |-> ((1|->SOLICITATION)))})))) : (((((clients) \/ (({client})))) --> (((1..2)*{SOLICITATION})))));
+((clientHasWorkout) : ((({}) +-> (WORKOUT))));
+((clientWorkedOut) : ((({}) +-> (WORKOUT))));
+((clientHasSolicitation) : ((({}) --> (((1..2)*{SOLICITATION})))));
+((exercise) : (EXERCISE));
+((category) : (((1..3)*{CATEGORY})));
+not(((exercise) : (exercises)));
+((exercises) \/ (({exercise}))) : POW( EXERCISE);
+((((exerciseHasCategory) \/ (({((exercise) |-> (category))})))) : (((((exercises) \/ (({exercise})))) --> (((1..3)*{CATEGORY})))));
+((exerciseHasCategory) : ((({}) --> (((1..3)*{CATEGORY})))));
+((workoutLog) : (CLIENT));
+clientsWithSolicitation : POW( CLIENT)
+END
+&
+THEORY EnumerateX IS
+CATEGORY == {PUSH,PULL,LEGS};
+SOLICITATION == {YES,NO}
+END

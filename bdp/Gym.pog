@@ -1,0 +1,746 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Proof_Obligations xmlns="https://www.atelierb.eu/Formats/pog" version="1.0">
+    <Define name="B definitions" hash="4145786887">
+        <Exp_Comparison op="=">
+            <Id value="NAT" typref="0"/>
+            <Binary_Exp op=".." typref="0">
+                <Integer_Literal value="0" typref="1"/>
+                <Id value="MAXINT" typref="1"/>
+            </Binary_Exp>
+        </Exp_Comparison>
+        <Exp_Comparison op="=">
+            <Id value="INT" typref="0"/>
+            <Binary_Exp op=".." typref="0">
+                <Id value="MININT" typref="1"/>
+                <Id value="MAXINT" typref="1"/>
+            </Binary_Exp>
+        </Exp_Comparison>
+    </Define>
+    <Define name="ctx" hash="0"/>
+    <Define name="seext" hash="0"/>
+    <Define name="lprp" hash="1023336884">
+        <Set>
+            <Id value="CLIENT" typref="0"/>
+        </Set>
+        <Set>
+            <Id value="WORKOUT" typref="0"/>
+        </Set>
+        <Set>
+            <Id value="EXERCISE" typref="0"/>
+        </Set>
+        <Set>
+            <Id value="CATEGORY" typref="0"/>
+            <Enumerated_Values>
+                <Id value="PUSH" typref="1"/>
+                <Id value="PULL" typref="1"/>
+                <Id value="LEGS" typref="1"/>
+            </Enumerated_Values>
+        </Set>
+        <Set>
+            <Id value="SOLICITATION" typref="0"/>
+            <Enumerated_Values>
+                <Id value="YES" typref="1"/>
+                <Id value="NO" typref="1"/>
+            </Enumerated_Values>
+        </Set>
+    </Define>
+    <Define name="inprp" hash="0"/>
+    <Define name="inext" hash="0"/>
+    <Define name="inv" hash="2729224813">
+        <Exp_Comparison op=":">
+            <Id value="timeInDays" typref="1" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:1:1"/>
+            <Id value="INTEGER" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:1:2"/>
+        </Exp_Comparison>
+        <Exp_Comparison op="&lt;:">
+            <Id value="clients" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:2:1"/>
+            <Id value="CLIENT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:2:2"/>
+        </Exp_Comparison>
+        <Exp_Comparison op="&lt;:">
+            <Id value="workouts" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:3:1"/>
+            <Id value="WORKOUT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:3:2"/>
+        </Exp_Comparison>
+        <Exp_Comparison op="&lt;:">
+            <Id value="exercises" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:4:1"/>
+            <Id value="EXERCISE" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:4:2"/>
+        </Exp_Comparison>
+        <Exp_Comparison op=":">
+            <Id value="clientHasWorkout" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:1"/>
+            <Binary_Exp op="+-&gt;" typref="3">
+                <Id value="clients" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:2:1"/>
+                <Id value="WORKOUT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:2:2"/>
+            </Binary_Exp>
+        </Exp_Comparison>
+        <Exp_Comparison op=":">
+            <Id value="clientWorkedOut" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:6:1"/>
+            <Binary_Exp op="+-&gt;" typref="3">
+                <Id value="clients" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:6:2:1"/>
+                <Id value="WORKOUT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:6:2:2"/>
+            </Binary_Exp>
+        </Exp_Comparison>
+        <Exp_Comparison op=":">
+            <Id value="workoutHasExercise" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:7:1"/>
+            <Binary_Exp op="&lt;-&gt;" typref="3">
+                <Id value="WORKOUT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:7:2:1"/>
+                <Id value="EXERCISE" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:7:2:2"/>
+            </Binary_Exp>
+        </Exp_Comparison>
+        <Exp_Comparison op=":">
+            <Id value="exerciseHasCategory" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:8:1"/>
+            <Binary_Exp op="--&gt;" typref="3">
+                <Id value="exercises" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:8:2:1"/>
+                <Id value="CATEGORY" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:8:2:2"/>
+            </Binary_Exp>
+        </Exp_Comparison>
+        <Exp_Comparison op=":">
+            <Id value="clientHasSolicitation" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:1"/>
+            <Binary_Exp op="--&gt;" typref="3">
+                <Id value="clients" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:2:1"/>
+                <Id value="SOLICITATION" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:2:2"/>
+            </Binary_Exp>
+        </Exp_Comparison>
+    </Define>
+    <Define name="ass" hash="0"/>
+    <Define name="cst" hash="0"/>
+    <Define name="sets" hash="1023336884">
+        <Set>
+            <Id value="CLIENT" typref="0"/>
+        </Set>
+        <Set>
+            <Id value="WORKOUT" typref="0"/>
+        </Set>
+        <Set>
+            <Id value="EXERCISE" typref="0"/>
+        </Set>
+        <Set>
+            <Id value="CATEGORY" typref="0"/>
+            <Enumerated_Values>
+                <Id value="PUSH" typref="1"/>
+                <Id value="PULL" typref="1"/>
+                <Id value="LEGS" typref="1"/>
+            </Enumerated_Values>
+        </Set>
+        <Set>
+            <Id value="SOLICITATION" typref="0"/>
+            <Enumerated_Values>
+                <Id value="YES" typref="1"/>
+                <Id value="NO" typref="1"/>
+            </Enumerated_Values>
+        </Set>
+    </Define>
+    <Proof_Obligation goalHash="4097220710">
+        <Tag>Initialisation</Tag>
+        <Definition name="B definitions"/>
+        <Definition name="ctx"/>
+        <Definition name="cst"/>
+        <Definition name="lprp"/>
+        <Definition name="inprp"/>
+        <Definition name="inext"/>
+        <Definition name="seext"/>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <EmptySet typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:4:1:5:2:1"/>
+                    <Binary_Exp op="+-&gt;" typref="3">
+                        <EmptySet typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:2:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:4:1:2:2:1"/>
+                        <Id value="WORKOUT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <EmptySet typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:7:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:4:1:7:2:1"/>
+                    <Binary_Exp op="&lt;-&gt;" typref="3">
+                        <Id value="WORKOUT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:7:2:1"/>
+                        <Id value="EXERCISE" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:7:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <EmptySet typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:8:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:4:1:8:2:1"/>
+                    <Binary_Exp op="--&gt;" typref="3">
+                        <EmptySet typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:8:2:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:4:1:4:2:1"/>
+                        <Id value="CATEGORY" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:8:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <EmptySet typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:4:1:9:2:1"/>
+                    <Binary_Exp op="--&gt;" typref="3">
+                        <EmptySet typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:2:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:4:1:2:2:1"/>
+                        <Id value="SOLICITATION" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+    </Proof_Obligation>
+    <Proof_Obligation goalHash="3765998345">
+        <Tag>Operation_addClient</Tag>
+        <Definition name="B definitions"/>
+        <Definition name="ctx"/>
+        <Definition name="cst"/>
+        <Definition name="lprp"/>
+        <Definition name="inprp"/>
+        <Definition name="inext"/>
+        <Definition name="seext"/>
+        <Definition name="inv"/>
+        <Definition name="ass"/>
+        <Hypothesis>
+            <Exp_Comparison op=":">
+                <Id value="client" typref="1" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:1:2:1:1:1"/>
+                <Id value="CLIENT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:1:2:1:1:2"/>
+            </Exp_Comparison>
+        </Hypothesis>
+        <Hypothesis>
+            <Unary_Pred op="not">
+                <Exp_Comparison op=":">
+                    <Id value="client" typref="1" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:1:2:1:2:1"/>
+                    <Id value="clients" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:1:2:1:2:2"/>
+                </Exp_Comparison>
+            </Unary_Pred>
+        </Hypothesis>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op="&lt;:">
+                    <Binary_Exp op="\/" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:2:1">
+                        <Id value="clients" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:1:3:1:1:2:1:1"/>
+                        <Nary_Exp op="{" typref="0">
+                            <Id value="client" typref="1" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:1:3:1:1:2:1:2:1"/>
+                        </Nary_Exp>
+                    </Binary_Exp>
+                    <Id value="CLIENT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:2:2"/>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <Id value="clientHasWorkout" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:1"/>
+                    <Binary_Exp op="+-&gt;" typref="3">
+                        <Binary_Exp op="\/" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:2:1">
+                            <Id value="clients" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:1:3:1:1:2:1:1"/>
+                            <Nary_Exp op="{" typref="0">
+                                <Id value="client" typref="1" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:1:3:1:1:2:1:2:1"/>
+                            </Nary_Exp>
+                        </Binary_Exp>
+                        <Id value="WORKOUT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <Id value="clientWorkedOut" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:6:1"/>
+                    <Binary_Exp op="+-&gt;" typref="3">
+                        <Binary_Exp op="\/" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:6:2:1">
+                            <Id value="clients" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:1:3:1:1:2:1:1"/>
+                            <Nary_Exp op="{" typref="0">
+                                <Id value="client" typref="1" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:1:3:1:1:2:1:2:1"/>
+                            </Nary_Exp>
+                        </Binary_Exp>
+                        <Id value="WORKOUT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:6:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <Binary_Exp op="\/" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:1">
+                        <Id value="clientHasSolicitation" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:1:3:1:2:2:1:1"/>
+                        <Nary_Exp op="{" typref="2">
+                            <Binary_Exp op="|-&gt;" typref="4">
+                                <Id value="client" typref="1" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:1:3:1:2:2:1:2:1:1"/>
+                                <Id value="YES" typref="1" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:1:3:1:2:2:1:2:1:2"/>
+                            </Binary_Exp>
+                        </Nary_Exp>
+                    </Binary_Exp>
+                    <Binary_Exp op="--&gt;" typref="3">
+                        <Binary_Exp op="\/" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:2:1">
+                            <Id value="clients" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:1:3:1:1:2:1:1"/>
+                            <Nary_Exp op="{" typref="0">
+                                <Id value="client" typref="1" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:1:3:1:1:2:1:2:1"/>
+                            </Nary_Exp>
+                        </Binary_Exp>
+                        <Id value="SOLICITATION" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+    </Proof_Obligation>
+    <Proof_Obligation goalHash="2432560900">
+        <Tag>Operation_removeClient</Tag>
+        <Definition name="B definitions"/>
+        <Definition name="ctx"/>
+        <Definition name="cst"/>
+        <Definition name="lprp"/>
+        <Definition name="inprp"/>
+        <Definition name="inext"/>
+        <Definition name="seext"/>
+        <Definition name="inv"/>
+        <Definition name="ass"/>
+        <Hypothesis>
+            <Exp_Comparison op=":">
+                <Id value="client" typref="1" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:2:2:1:1"/>
+                <Id value="CLIENT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:2:2:1:2"/>
+            </Exp_Comparison>
+        </Hypothesis>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <Id value="clientHasWorkout" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:1"/>
+                    <Binary_Exp op="+-&gt;" typref="3">
+                        <EmptySet typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:2:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:2:3:1:2:1"/>
+                        <Id value="WORKOUT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <Id value="clientWorkedOut" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:6:1"/>
+                    <Binary_Exp op="+-&gt;" typref="3">
+                        <EmptySet typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:6:2:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:2:3:1:2:1"/>
+                        <Id value="WORKOUT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:6:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <Id value="clientHasSolicitation" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:1"/>
+                    <Binary_Exp op="--&gt;" typref="3">
+                        <EmptySet typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:2:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:2:3:1:2:1"/>
+                        <Id value="SOLICITATION" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+    </Proof_Obligation>
+    <Proof_Obligation goalHash="2837317604">
+        <Tag>Operation_addExercise</Tag>
+        <Definition name="B definitions"/>
+        <Definition name="ctx"/>
+        <Definition name="cst"/>
+        <Definition name="lprp"/>
+        <Definition name="inprp"/>
+        <Definition name="inext"/>
+        <Definition name="seext"/>
+        <Definition name="inv"/>
+        <Definition name="ass"/>
+        <Hypothesis>
+            <Exp_Comparison op=":">
+                <Id value="exercise" typref="1" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:5:2:1:1:1"/>
+                <Id value="EXERCISE" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:5:2:1:1:2"/>
+            </Exp_Comparison>
+        </Hypothesis>
+        <Hypothesis>
+            <Exp_Comparison op=":">
+                <Id value="category" typref="1" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:5:2:1:2:1"/>
+                <Id value="CATEGORY" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:5:2:1:2:2"/>
+            </Exp_Comparison>
+        </Hypothesis>
+        <Hypothesis>
+            <Unary_Pred op="not">
+                <Exp_Comparison op=":">
+                    <Id value="exercise" typref="1" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:5:2:1:3:1"/>
+                    <Id value="exercises" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:5:2:1:3:2"/>
+                </Exp_Comparison>
+            </Unary_Pred>
+        </Hypothesis>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op="&lt;:">
+                    <Binary_Exp op="\/" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:4:1">
+                        <Id value="exercises" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:5:3:1:1:2:1:1"/>
+                        <Nary_Exp op="{" typref="0">
+                            <Id value="exercise" typref="1" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:5:3:1:1:2:1:2:1"/>
+                        </Nary_Exp>
+                    </Binary_Exp>
+                    <Id value="EXERCISE" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:4:2"/>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <Binary_Exp op="\/" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:8:1">
+                        <Id value="exerciseHasCategory" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:5:3:1:2:2:1:1"/>
+                        <Nary_Exp op="{" typref="2">
+                            <Binary_Exp op="|-&gt;" typref="4">
+                                <Id value="exercise" typref="1" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:5:3:1:2:2:1:2:1:1"/>
+                                <Id value="category" typref="1" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:5:3:1:2:2:1:2:1:2"/>
+                            </Binary_Exp>
+                        </Nary_Exp>
+                    </Binary_Exp>
+                    <Binary_Exp op="--&gt;" typref="3">
+                        <Binary_Exp op="\/" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:8:2:1">
+                            <Id value="exercises" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:5:3:1:1:2:1:1"/>
+                            <Nary_Exp op="{" typref="0">
+                                <Id value="exercise" typref="1" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:5:3:1:1:2:1:2:1"/>
+                            </Nary_Exp>
+                        </Binary_Exp>
+                        <Id value="CATEGORY" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:8:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+    </Proof_Obligation>
+    <Proof_Obligation goalHash="1615068351">
+        <Tag>Operation_removeExercise</Tag>
+        <Definition name="B definitions"/>
+        <Definition name="ctx"/>
+        <Definition name="cst"/>
+        <Definition name="lprp"/>
+        <Definition name="inprp"/>
+        <Definition name="inext"/>
+        <Definition name="seext"/>
+        <Definition name="inv"/>
+        <Definition name="ass"/>
+        <Hypothesis>
+            <Exp_Comparison op=":">
+                <Id value="exercise" typref="1" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:6:2:1:1"/>
+                <Id value="EXERCISE" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:6:2:1:2"/>
+            </Exp_Comparison>
+        </Hypothesis>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <Id value="exerciseHasCategory" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:8:1"/>
+                    <Binary_Exp op="--&gt;" typref="3">
+                        <EmptySet typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:8:2:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:6:3:1:2:1"/>
+                        <Id value="CATEGORY" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:8:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+    </Proof_Obligation>
+    <Proof_Obligation goalHash="2432560900">
+        <Tag>Operation_getWorkoutLog</Tag>
+        <Definition name="B definitions"/>
+        <Definition name="ctx"/>
+        <Definition name="cst"/>
+        <Definition name="lprp"/>
+        <Definition name="inprp"/>
+        <Definition name="inext"/>
+        <Definition name="seext"/>
+        <Definition name="inv"/>
+        <Definition name="ass"/>
+        <Hypothesis>
+            <Exp_Comparison op=":">
+                <Id value="client" typref="1" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:7:3:1:1:1"/>
+                <Id value="CLIENT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:7:3:1:1:2"/>
+            </Exp_Comparison>
+        </Hypothesis>
+        <Hypothesis>
+            <Exp_Comparison op=":">
+                <Id value="workoutLog" typref="1" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:7:3:1:2:1"/>
+                <Id value="CLIENT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:7:3:1:2:2"/>
+            </Exp_Comparison>
+        </Hypothesis>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <Id value="clientHasWorkout" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:1"/>
+                    <Binary_Exp op="+-&gt;" typref="3">
+                        <EmptySet typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:2:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:7:4:1:2:1"/>
+                        <Id value="WORKOUT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <Id value="clientWorkedOut" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:6:1"/>
+                    <Binary_Exp op="+-&gt;" typref="3">
+                        <EmptySet typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:6:2:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:7:4:1:2:1"/>
+                        <Id value="WORKOUT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:6:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <Id value="clientHasSolicitation" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:1"/>
+                    <Binary_Exp op="--&gt;" typref="3">
+                        <EmptySet typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:2:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:7:4:1:2:1"/>
+                        <Id value="SOLICITATION" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+    </Proof_Obligation>
+    <Proof_Obligation goalHash="2432560900">
+        <Tag>Operation_askForWorkout</Tag>
+        <Definition name="B definitions"/>
+        <Definition name="ctx"/>
+        <Definition name="cst"/>
+        <Definition name="lprp"/>
+        <Definition name="inprp"/>
+        <Definition name="inext"/>
+        <Definition name="seext"/>
+        <Definition name="inv"/>
+        <Definition name="ass"/>
+        <Hypothesis>
+            <Exp_Comparison op=":">
+                <Id value="client" typref="1" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:8:2:1:1"/>
+                <Id value="CLIENT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:8:2:1:2"/>
+            </Exp_Comparison>
+        </Hypothesis>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <Id value="clientHasWorkout" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:1"/>
+                    <Binary_Exp op="+-&gt;" typref="3">
+                        <EmptySet typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:2:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:8:3:1:2:1"/>
+                        <Id value="WORKOUT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <Id value="clientWorkedOut" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:6:1"/>
+                    <Binary_Exp op="+-&gt;" typref="3">
+                        <EmptySet typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:6:2:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:8:3:1:2:1"/>
+                        <Id value="WORKOUT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:6:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <Id value="clientHasSolicitation" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:1"/>
+                    <Binary_Exp op="--&gt;" typref="3">
+                        <EmptySet typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:2:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:8:3:1:2:1"/>
+                        <Id value="SOLICITATION" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+    </Proof_Obligation>
+    <Proof_Obligation goalHash="2432560900">
+        <Tag>Operation_getClientsWithWorkoutSolicitations</Tag>
+        <Definition name="B definitions"/>
+        <Definition name="ctx"/>
+        <Definition name="cst"/>
+        <Definition name="lprp"/>
+        <Definition name="inprp"/>
+        <Definition name="inext"/>
+        <Definition name="seext"/>
+        <Definition name="inv"/>
+        <Definition name="ass"/>
+        <Hypothesis>
+            <Exp_Comparison op="&lt;:">
+                <Id value="clientsWithSolicitation" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:9:2:1:1"/>
+                <Id value="CLIENT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:9:2:1:2"/>
+            </Exp_Comparison>
+        </Hypothesis>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <Id value="clientHasWorkout" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:1"/>
+                    <Binary_Exp op="+-&gt;" typref="3">
+                        <EmptySet typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:2:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:9:3:1:2:1"/>
+                        <Id value="WORKOUT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <Id value="clientWorkedOut" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:6:1"/>
+                    <Binary_Exp op="+-&gt;" typref="3">
+                        <EmptySet typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:6:2:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:9:3:1:2:1"/>
+                        <Id value="WORKOUT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:6:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <Id value="clientHasSolicitation" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:1"/>
+                    <Binary_Exp op="--&gt;" typref="3">
+                        <EmptySet typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:2:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:9:3:1:2:1"/>
+                        <Id value="SOLICITATION" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+    </Proof_Obligation>
+    <Proof_Obligation goalHash="2432560900">
+        <Tag>Operation_defineClientWorkout</Tag>
+        <Definition name="B definitions"/>
+        <Definition name="ctx"/>
+        <Definition name="cst"/>
+        <Definition name="lprp"/>
+        <Definition name="inprp"/>
+        <Definition name="inext"/>
+        <Definition name="seext"/>
+        <Definition name="inv"/>
+        <Definition name="ass"/>
+        <Hypothesis>
+            <Exp_Comparison op=":">
+                <Id value="client" typref="1" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:10:2:1:1"/>
+                <Id value="CLIENT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:10:2:1:2"/>
+            </Exp_Comparison>
+        </Hypothesis>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <Id value="clientHasWorkout" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:1"/>
+                    <Binary_Exp op="+-&gt;" typref="3">
+                        <EmptySet typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:2:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:10:3:1:2:1"/>
+                        <Id value="WORKOUT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <Id value="clientWorkedOut" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:6:1"/>
+                    <Binary_Exp op="+-&gt;" typref="3">
+                        <EmptySet typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:6:2:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:10:3:1:2:1"/>
+                        <Id value="WORKOUT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:6:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <Id value="clientHasSolicitation" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:1"/>
+                    <Binary_Exp op="--&gt;" typref="3">
+                        <EmptySet typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:2:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:10:3:1:2:1"/>
+                        <Id value="SOLICITATION" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+    </Proof_Obligation>
+    <Proof_Obligation goalHash="2432560900">
+        <Tag>Operation_goToNextDay</Tag>
+        <Definition name="B definitions"/>
+        <Definition name="ctx"/>
+        <Definition name="cst"/>
+        <Definition name="lprp"/>
+        <Definition name="inprp"/>
+        <Definition name="inext"/>
+        <Definition name="seext"/>
+        <Definition name="inv"/>
+        <Definition name="ass"/>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <Id value="clientHasWorkout" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:1"/>
+                    <Binary_Exp op="+-&gt;" typref="3">
+                        <EmptySet typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:2:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:11:1:1:2:1"/>
+                        <Id value="WORKOUT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:5:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <Id value="clientWorkedOut" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:6:1"/>
+                    <Binary_Exp op="+-&gt;" typref="3">
+                        <EmptySet typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:6:2:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:11:1:1:2:1"/>
+                        <Id value="WORKOUT" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:6:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+        <Simple_Goal>
+            <Tag>Invariant is preserved</Tag>
+            <Goal>
+                <Exp_Comparison op=":">
+                    <Id value="clientHasSolicitation" typref="2" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:1"/>
+                    <Binary_Exp op="--&gt;" typref="3">
+                        <EmptySet typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:2:1,G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:5:11:1:1:2:1"/>
+                        <Id value="SOLICITATION" typref="0" tag="G:\Other computers\Meu laptop\Drive\UFRN\UFRN7\METODOS_FORMAIS\Exercicios\GymProjectAnaAndLeo\bdp\Gym.bxml:1:3:1:9:2:2"/>
+                    </Binary_Exp>
+                </Exp_Comparison>
+            </Goal>
+        </Simple_Goal>
+    </Proof_Obligation>
+    <TypeInfos>
+        <Type id="0">
+            <Unary_Exp op="POW">
+                <Id value="INTEGER"/>
+            </Unary_Exp>
+        </Type>
+        <Type id="1">
+            <Id value="INTEGER"/>
+        </Type>
+        <Type id="2">
+            <Unary_Exp op="POW">
+                <Binary_Exp op="*">
+                    <Id value="INTEGER"/>
+                    <Id value="INTEGER"/>
+                </Binary_Exp>
+            </Unary_Exp>
+        </Type>
+        <Type id="3">
+            <Unary_Exp op="POW">
+                <Unary_Exp op="POW">
+                    <Binary_Exp op="*">
+                        <Id value="INTEGER"/>
+                        <Id value="INTEGER"/>
+                    </Binary_Exp>
+                </Unary_Exp>
+            </Unary_Exp>
+        </Type>
+        <Type id="4">
+            <Binary_Exp op="*">
+                <Id value="INTEGER"/>
+                <Id value="INTEGER"/>
+            </Binary_Exp>
+        </Type>
+    </TypeInfos>
+</Proof_Obligations>

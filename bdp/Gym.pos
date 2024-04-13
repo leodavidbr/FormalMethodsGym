@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Proof_Obligations xmlns="https://www.atelierb.eu/Formats/pog" version="1.0">
+    <Proof_Obligation>
+        <Tag>Initialisation</Tag>
+        <Simple_Goal status="Proved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Proved(0)" methodList="pr" passList="Force(0),?"/>
+        </Simple_Goal>
+        <Simple_Goal status="Proved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Proved(0)" methodList="pr" passList="Force(0),?"/>
+        </Simple_Goal>
+        <Simple_Goal status="Proved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Proved(0)" methodList="pr" passList="Force(0),?"/>
+        </Simple_Goal>
+        <Simple_Goal status="Proved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Proved(0)" methodList="pr" passList="Force(0),?"/>
+        </Simple_Goal>
+    </Proof_Obligation>
+    <Proof_Obligation>
+        <Tag>Operation_addClient</Tag>
+        <Simple_Goal status="Proved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Proved(0)" methodList="pr" passList="Force(0),?"/>
+        </Simple_Goal>
+        <Simple_Goal status="Proved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Proved(0)" methodList="pr" passList="Force(0),?"/>
+        </Simple_Goal>
+        <Simple_Goal status="Proved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Proved(0)" methodList="pr" passList="Force(0),?"/>
+        </Simple_Goal>
+        <Simple_Goal status="Proved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Proved(2)" methodList="pr" passList="Force(2),(?; 0; 1)"/>
+        </Simple_Goal>
+    </Proof_Obligation>
+    <Proof_Obligation>
+        <Tag>Operation_removeClient</Tag>
+        <Simple_Goal status="Unproved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Unproved" methodList="?" passList="Force(0),(?; 0; 1; 2; 3)"/>
+        </Simple_Goal>
+        <Simple_Goal status="Unproved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Unproved" methodList="?" passList="Force(0),(?; 0; 1; 2; 3)"/>
+        </Simple_Goal>
+        <Simple_Goal status="Unproved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Unproved" methodList="?" passList="Force(0),(?; 0; 1; 2; 3)"/>
+        </Simple_Goal>
+    </Proof_Obligation>
+    <Proof_Obligation>
+        <Tag>Operation_addExercise</Tag>
+        <Simple_Goal status="Proved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Proved(0)" methodList="pr" passList="Force(0),?"/>
+        </Simple_Goal>
+        <Simple_Goal status="Proved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Proved(2)" methodList="pr" passList="Force(2),(?; 0; 1)"/>
+        </Simple_Goal>
+    </Proof_Obligation>
+    <Proof_Obligation>
+        <Tag>Operation_removeExercise</Tag>
+        <Simple_Goal status="Unproved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Unproved" methodList="?" passList="Force(0),(?; 0; 1; 2; 3)"/>
+        </Simple_Goal>
+    </Proof_Obligation>
+    <Proof_Obligation>
+        <Tag>Operation_getWorkoutLog</Tag>
+        <Simple_Goal status="Unproved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Unproved" methodList="?" passList="Force(0),(?; 0; 1; 2; 3)"/>
+        </Simple_Goal>
+        <Simple_Goal status="Unproved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Unproved" methodList="?" passList="Force(0),(?; 0; 1; 2; 3)"/>
+        </Simple_Goal>
+        <Simple_Goal status="Unproved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Unproved" methodList="?" passList="Force(0),(?; 0; 1; 2; 3)"/>
+        </Simple_Goal>
+    </Proof_Obligation>
+    <Proof_Obligation>
+        <Tag>Operation_askForWorkout</Tag>
+        <Simple_Goal status="Unproved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Unproved" methodList="?" passList="Force(0),(?; 0; 1; 2; 3)"/>
+        </Simple_Goal>
+        <Simple_Goal status="Unproved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Unproved" methodList="?" passList="Force(0),(?; 0; 1; 2; 3)"/>
+        </Simple_Goal>
+        <Simple_Goal status="Unproved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Unproved" methodList="?" passList="Force(0),(?; 0; 1; 2; 3)"/>
+        </Simple_Goal>
+    </Proof_Obligation>
+    <Proof_Obligation>
+        <Tag>Operation_getClientsWithWorkoutSolicitations</Tag>
+        <Simple_Goal status="Unproved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Unproved" methodList="?" passList="Force(0),(?; 0; 1; 2; 3)"/>
+        </Simple_Goal>
+        <Simple_Goal status="Unproved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Unproved" methodList="?" passList="Force(0),(?; 0; 1; 2; 3)"/>
+        </Simple_Goal>
+        <Simple_Goal status="Unproved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Unproved" methodList="?" passList="Force(0),(?; 0; 1; 2; 3)"/>
+        </Simple_Goal>
+    </Proof_Obligation>
+    <Proof_Obligation>
+        <Tag>Operation_defineClientWorkout</Tag>
+        <Simple_Goal status="Unproved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Unproved" methodList="?" passList="Force(0),(?; 0; 1; 2; 3)"/>
+        </Simple_Goal>
+        <Simple_Goal status="Unproved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Unproved" methodList="?" passList="Force(0),(?; 0; 1; 2; 3)"/>
+        </Simple_Goal>
+        <Simple_Goal status="Unproved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Unproved" methodList="?" passList="Force(0),(?; 0; 1; 2; 3)"/>
+        </Simple_Goal>
+    </Proof_Obligation>
+    <Proof_Obligation>
+        <Tag>Operation_goToNextDay</Tag>
+        <Simple_Goal status="Unproved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Unproved" methodList="?" passList="Force(0),(?; 0; 1; 2; 3)"/>
+        </Simple_Goal>
+        <Simple_Goal status="Unproved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Unproved" methodList="?" passList="Force(0),(?; 0; 1; 2; 3)"/>
+        </Simple_Goal>
+        <Simple_Goal status="Unproved">
+            <Tag>Invariant is preserved</Tag>
+            <Proof_State proofState="Unproved" methodList="?" passList="Force(0),(?; 0; 1; 2; 3)"/>
+        </Simple_Goal>
+    </Proof_Obligation>
+</Proof_Obligations>
