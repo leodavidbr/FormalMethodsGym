@@ -99,8 +99,8 @@ OPERATIONS
         
         // fazer a operação
         removeExercise(exercise) =
-        PRE exercise : EXERCISE
-        THEN exercises := {}
+        PRE exercise : EXERCISE & exercise : exercises
+        THEN exercises := exercises - {exercise}
         END;
         
         // TODO tipar workoutLog
