@@ -101,10 +101,10 @@ OPERATIONS
         THEN clients := {}
         END;
         
-        // fazer a operação
+        // PENSAR: pode chamar a operacao se o cliente ja tiver solicitacao?
         askForWorkout(client) = 
-        PRE client : CLIENT
-        THEN clients := {}
+        PRE client : CLIENT & client : clients
+        THEN clientHasSolicitation(client) := YES
         END;
         
         // fazer a operação
