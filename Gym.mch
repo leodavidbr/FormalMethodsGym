@@ -1,7 +1,9 @@
 // TODO: Refinar as funções, pois todas estão como parciais
 // TODO: Analisar clientHasSolicitation, se deve ser feito com SOLICITATION ou de outra forma
+// TODO: Adicionar as invariantes
+
 // COMENTARIO:Nao precisa remover os conjuntos, so nao pode ter dados abstratos na interface das operacoes
-// TESTE
+
 
 MACHINE
     Gym
@@ -78,10 +80,13 @@ OPERATIONS
                                         \/ {workout |-> exPush, workout |-> exPull, workout |-> exLeg}
         END;
         
-        // fazer a operação
+        // verificar se esta correto (pois a prova nao foi automaticamente)
         removeWorkout(workout) =
-        PRE workout : WORKOUT
-        THEN workouts := {}
+        PRE workout : WORKOUT & workout : workouts
+        THEN workouts := workouts - {workout}
+            || clientHasWorkout := clientHasWorkout |>> {workout}
+            || clientHasSolicitation := clientHasSolicitation \/ clientHasWorkout~[{workout}]*{YES}
+            || workoutHasExercise := {workout} <<| workoutHasExercise
         END;
         
         addExercise(exercise, category) =
@@ -99,6 +104,7 @@ OPERATIONS
         END;
         
         // TODO tipar workoutLog
+        // fazer a operação
         workoutLog <-- getWorkoutLog(client) =
         PRE client : CLIENT & workoutLog : CLIENT
         THEN clients := {}
