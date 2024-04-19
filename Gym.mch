@@ -9,6 +9,14 @@ MACHINE
     Gym
     
 CONSTANTS
+
+    CLIENT,
+    WORKOUT,
+    EXERCISE, 
+    CATEGORY,
+    SOLICITATION,
+    DAY,
+    
     maxClients,
     maxWorkouts,
     maxExercises,
@@ -25,12 +33,9 @@ PROPERTIES
     & maxExercisesInWorkout = 7
     & maxWorkoutsInHistory = 40
     & exactNumClientWorkouts = 3
-SETS
-    CLIENT; WORKOUT; EXERCISE; 
-    CATEGORY = {PUSH, PULL, LEGS};
-    SOLICITATION = {YES, NO};
-    DAY = {SUN,MON,TUE,WED,THR,FRI,SAT}
-    
+//    & CATEGORY = {PUSH, PULL, LEGS}
+//    & SOLICITATION = {YES, NO}
+//    & DAY = {SUN,MON,TUE,WED,THR,FRI,SAT}
     
 VARIABLES
     timeInDays
@@ -185,7 +190,7 @@ OPERATIONS
         PRE client : CLIENT & client : clients 
             & clientHasSolicitation(client) = YES
             & workoutPush : WORKOUT & workoutPull : WORKOUT & workoutLeg : WORKOUT
-            & workoutPush : workouts & workoutHasCategory[{workoutPush}] = {PUSH}
+            & workoutPush : workouts & workoutHasCategory[{workoutPush}] = {0}
             & workoutPull : workouts & workoutHasCategory[{workoutPull}] = {PULL}
             & workoutLeg : workouts & workoutHasCategory[{workoutLeg}] = {LEGS}
         THEN clientHasWorkout := ({client} <<| clientHasWorkout) \/ {client |-> workoutPush, client |-> workoutPull, client |-> workoutLeg} ||
