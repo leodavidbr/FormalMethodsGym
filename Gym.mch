@@ -7,11 +7,30 @@
 
 MACHINE
     Gym
+    
+CONSTANTS
+    maxClients,
+    maxWorkouts,
+    maxExercises,
+    
+    maxExercisesInWorkout,
+    maxWorkoutsInHistory,
+    exactNumClientWorkouts
+    
+PROPERTIES
+    maxClients = 100
+    & maxWorkouts = 15
+    & maxExercises = 30
 
+    & maxExercisesInWorkout = 7
+    & maxWorkoutsInHistory = 40
+    & exactNumClientWorkouts = 3
 SETS
     CLIENT; WORKOUT; EXERCISE; 
-    CATEGORY = {PUSH, PULL, LEGS}; 
-    SOLICITATION = {YES, NO}
+    CATEGORY = {PUSH, PULL, LEGS};
+    SOLICITATION = {YES, NO};
+    DAY = {SUN,MON,TUE,WED,THR,FRI,SAT}
+    
     
 VARIABLES
     timeInDays
@@ -22,7 +41,8 @@ VARIABLES
     clientWorkedOut,
     workoutHasExercise,
     exerciseHasCategory,
-    clientHasSolicitation
+    clientHasSolicitation,
+    workoutHasCategory
 
 INVARIANT
     timeInDays : INTEGER
@@ -31,12 +51,28 @@ INVARIANT
     & workouts <: WORKOUT
     & exercises <: EXERCISE
     
-    & clientHasWorkout : clients +-> WORKOUT
+    & clientHasWorkout : clients <-> workouts
     & clientWorkedOut : clients +-> WORKOUT
-    & workoutHasExercise : workouts <-> exercises // TODO: verificar com Marcel se pode (acredito que sim)
+    & workoutHasExercise : workouts <-> exercises
     & exerciseHasCategory : exercises --> CATEGORY
     & clientHasSolicitation : clients --> SOLICITATION
+    & workoutHasCategory : workouts --> CATEGORY
     
+    // Bussines rules
+    // limits
+    & card(clients) <= maxClients
+    & card(workouts) <= maxWorkouts
+    & card(exercises) <= maxExercises
+    & !clientx . (clientx : CLIENT & clientx : clients => card(clientWorkedOut[{clientx}]) < maxWorkoutsInHistory)
+    // todo cliente que não tem solicitação de treino tem 3 treinos
+    & !clientx . (clientx : CLIENT & clientx : clients & clientHasSolicitation(clientx) = NO => card(clientHasWorkout[{clientx}]) = exactNumClientWorkouts)
+    // todo cliente que tem solicitação de treino tem 3 ou 0 treinos
+    & !clientx . (clientx : CLIENT & clientx : clients & clientHasSolicitation(clientx) = YES => card(clientHasWorkout[{clientx}]) = exactNumClientWorkouts or card(clientHasWorkout[{clientx}]) = 0)
+    // todo cliente que tem treino (sempre exatamente 3) tem um exercício de cada categoria
+    & !clientx . (clientx : CLIENT & clientx : clients & card(clientHasWorkout[{clientx}]) = 3 =>  workoutHasCategory[ clientHasWorkout[{clientx}]] = CATEGORY )
+    
+    // 
+        
 INITIALISATION
     timeInDays := 0
     
@@ -49,16 +85,21 @@ INITIALISATION
     || workoutHasExercise := {}
     || exerciseHasCategory := {}
     || clientHasSolicitation := {}
+    || workoutHasCategory := {}
     
 OPERATIONS 
+        
+        //ok
         addClient(client) =
         PRE client : CLIENT
             & client /: clients
+            & card(clients) < maxClients
         THEN clients := clients \/ {client}
             || clientHasSolicitation  := clientHasSolicitation \/ {client |-> YES}
         END;
         
         // TODO: verificar se esta correto.
+        //Por mim está ok
         removeClient(client) =
         PRE client : CLIENT & client : clients
         THEN clients := clients - {client}
@@ -67,10 +108,11 @@ OPERATIONS
             || clientWorkedOut := {client} <<| clientWorkedOut
         END;
         
-        // PENSAR: addWorkout pode receber exercicios ainda nao cadastrados e adiciona-los a lista de exercicios?
+        // TODO: workout has category
         addWorkout(workout, exPush, exPull, exLeg) =
         PRE workout : WORKOUT
             & workout /: workouts
+            & card(workouts) < maxWorkouts
             & exPush : EXERCISE & exPull : EXERCISE & exLeg : EXERCISE
             & exPush : exercises & exerciseHasCategory[{exPush}] = {PUSH}
             & exPull : exercises & exerciseHasCategory[{exPull}] = {PULL}
@@ -81,6 +123,8 @@ OPERATIONS
         END;
         
         // verificar se esta correto (pois a prova nao foi automaticamente)
+        //para mim está coerente
+        //nao ficou claro se o treino deve ser removido do histórico do cliente
         removeWorkout(workout) =
         PRE workout : WORKOUT & workout : workouts
         THEN workouts := workouts - {workout}
@@ -89,48 +133,72 @@ OPERATIONS
             || workoutHasExercise := {workout} <<| workoutHasExercise
         END;
         
+        //ok
         addExercise(exercise, category) =
         PRE exercise : EXERCISE
             & category : CATEGORY
             & exercise /: exercises
+            & card(exercises) < maxExercises
         THEN exercises := exercises \/ {exercise}
             || exerciseHasCategory := exerciseHasCategory \/ {exercise|-> category}
         END;
         
-        // fazer a operação
+        //so pode remover um exercicio que nao possui nenhum treino atrelado
+        //verificar operação pois não foi feita a prova automatica
         removeExercise(exercise) =
-        PRE exercise : EXERCISE & exercise : exercises
-        THEN exercises := exercises - {exercise}
+        PRE exercise : EXERCISE
+            & exercise : exercises
+            & exercise /: ran(workoutHasExercise)
+        THEN
+            exercises := exercises - {exercise}
+            || exerciseHasCategory := {exercise} <<| exerciseHasCategory
         END;
         
-        // TODO tipar workoutLog
-        // fazer a operação
+        // TODO: tipar workoutLog?
+        //esta errado, clientHasWorkoout deve ser manipulado
         workoutLog <-- getWorkoutLog(client) =
-        PRE client : CLIENT & workoutLog : CLIENT
-        THEN clients := {}
+        PRE client : CLIENT
+            & client : clients
+            & client : dom(clientHasWorkout)
+//            & workoutLog <: WORKOUT
+        THEN
+            workoutLog := clientHasWorkout(client)
         END;
         
-        // PENSAR: pode chamar a operacao se o cliente ja tiver solicitacao?
+        
         askForWorkout(client) = 
         PRE client : CLIENT & client : clients
+            & clientHasSolicitation(client) = NO
         THEN clientHasSolicitation(client) := YES
         END;
         
-        // fazer a operação
+        // validar
         clientsWithSolicitation <-- getClientsWithWorkoutSolicitations = 
-        PRE clientsWithSolicitation <: CLIENT
-        THEN clients := {}
-        END;
+        clientsWithSolicitation := {cc | cc : dom(clientHasSolicitation) & clientHasSolicitation(cc) = YES};
         
-        // VERIFICAR: se no doc define que so pode ser definido o treino se houver solicitacao? Acho que eh bom ser assim
-        defineClientWorkout(client, workout) =
-        PRE client : CLIENT & workout : WORKOUT
-            & client : clients & workout : workouts
+        // TODO: Add complexity of the workout history size limit
+        defineClientWorkouts(client, workoutPush, workoutPull, workoutLeg) =
+        PRE client : CLIENT & client : clients 
             & clientHasSolicitation(client) = YES
-        THEN clientHasWorkout(client) := workout
+            & workoutPush : WORKOUT & workoutPull : WORKOUT & workoutLeg : WORKOUT
+            & workoutPush : workouts & workoutHasCategory[{workoutPush}] = {PUSH}
+            & workoutPull : workouts & workoutHasCategory[{workoutPull}] = {PULL}
+            & workoutLeg : workouts & workoutHasCategory[{workoutLeg}] = {LEGS}
+        THEN clientHasWorkout := ({client} <<| clientHasWorkout) \/ {client |-> workoutPush, client |-> workoutPull, client |-> workoutLeg} ||
+             clientHasSolicitation(client) := NO
         END;
         
-        // fazer a operação
-        goToNextDay = clients := {}
+        // TODO: fazer a operacao
+        exercisesOfTheDay <-- getExercisesOfDayOfClient(client, day) =
+        PRE client : CLIENT & client : clients
+            & day : DAY
+            & exercisesOfTheDay : 0..maxExercisesInWorkout +-> EXERCISE
+        THEN clients := {}
+        END
+        
+        
+        
+//        // fazer a operação
+//        goToNextDay = clients := {}
         
 END
