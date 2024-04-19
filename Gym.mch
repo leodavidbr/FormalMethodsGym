@@ -92,6 +92,7 @@ OPERATIONS
         //ok
         addClient(client) =
         PRE client : CLIENT
+            & clients : FIN(clients)
             & client /: clients
             & card(clients) < maxClients
         THEN clients := clients \/ {client}
@@ -109,17 +110,19 @@ OPERATIONS
         END;
         
         // TODO: workout has category
-        addWorkout(workout, exPush, exPull, exLeg) =
-        PRE workout : WORKOUT
+        addWorkout(workout, category, exercisesInWorkout) =
+        PRE workout : WORKOUT & category : CATEGORY
+            & workouts : FIN(workouts)
             & workout /: workouts
             & card(workouts) < maxWorkouts
-            & exPush : EXERCISE & exPull : EXERCISE & exLeg : EXERCISE
-            & exPush : exercises & exerciseHasCategory[{exPush}] = {PUSH}
-            & exPull : exercises & exerciseHasCategory[{exPull}] = {PULL}
-            & exLeg : exercises & exerciseHasCategory[{exLeg}] = {LEGS}
+            & exercisesInWorkout : 0..maxExercisesInWorkout --> exercises
+//            & exPush : EXERCISE & exPull : EXERCISE & exLeg : EXERCISE
+//            & exPush : exercises & exerciseHasCategory[{exPush}] = {PUSH}
         THEN workouts := workouts \/ {workout}
-            || workoutHasExercise := workoutHasExercise 
-                                        \/ {workout |-> exPush, workout |-> exPull, workout |-> exLeg}
+            || workoutHasCategory(workout) := category
+            || workoutHasExercise := workoutHasExercise \/ {workout}*ran(exercisesInWorkout)
+//            || workoutHasExercise := workoutHasExercise 
+//                                        \/ {workout |-> exPush, workout |-> exPull, workout |-> exLeg}
         END;
         
         // verificar se esta correto (pois a prova nao foi automaticamente)
@@ -137,6 +140,7 @@ OPERATIONS
         addExercise(exercise, category) =
         PRE exercise : EXERCISE
             & category : CATEGORY
+            & exercises : FIN(exercises)
             & exercise /: exercises
             & card(exercises) < maxExercises
         THEN exercises := exercises \/ {exercise}
