@@ -23,7 +23,10 @@ CONSTANTS
     
     maxExercisesInWorkout,
     maxWorkoutsInHistory,
-    exactNumClientWorkouts
+    exactNumClientWorkouts,
+    PUSH, PULL, LEGS,
+    YES, NO,
+    SUN,MON,TUE,WED,THR,FRI,SAT
     
 PROPERTIES
     maxClients = 100
@@ -33,9 +36,21 @@ PROPERTIES
     & maxExercisesInWorkout = 7
     & maxWorkoutsInHistory = 40
     & exactNumClientWorkouts = 3
-//    & CATEGORY = {PUSH, PULL, LEGS}
-//    & SOLICITATION = {YES, NO}
-//    & DAY = {SUN,MON,TUE,WED,THR,FRI,SAT}
+    
+    & CLIENT <: NAT
+    & WORKOUT <: NAT
+    & EXERCISE <: NAT
+    & CATEGORY <: 0..2
+    & SOLICITATION <: NAT
+    & DAY <: NAT
+    
+    & PUSH = 0 & PULL = 1 & LEGS =2
+    & NO = 0 & YES = 1
+    & SUN=0 & MON=1 & TUE=2 & WED=3 & THR=4 & FRI=5 & SAT=6
+
+    & CATEGORY = {PUSH, PULL, LEGS}
+    & SOLICITATION = {YES, NO}
+    & DAY = {SUN,MON,TUE,WED,THR,FRI,SAT}
     
 VARIABLES
     timeInDays
@@ -190,7 +205,7 @@ OPERATIONS
         PRE client : CLIENT & client : clients 
             & clientHasSolicitation(client) = YES
             & workoutPush : WORKOUT & workoutPull : WORKOUT & workoutLeg : WORKOUT
-            & workoutPush : workouts & workoutHasCategory[{workoutPush}] = {0}
+            & workoutPush : workouts & workoutHasCategory[{workoutPush}] = {PUSH}
             & workoutPull : workouts & workoutHasCategory[{workoutPull}] = {PULL}
             & workoutLeg : workouts & workoutHasCategory[{workoutLeg}] = {LEGS}
         THEN clientHasWorkout := ({client} <<| clientHasWorkout) \/ {client |-> workoutPush, client |-> workoutPull, client |-> workoutLeg} ||
