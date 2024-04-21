@@ -70,7 +70,7 @@ INVARIANT
     & exercises <: EXERCISE
     
     & clientHasWorkout : clients <-> workouts
-    & clientWorkedOut : clients +-> WORKOUT
+    & clientWorkedOut : clients <-> WORKOUT
     & workoutHasExercise : workouts <-> exercises
     & exerciseHasCategory : exercises --> CATEGORY
     & clientHasSolicitation : clients --> SOLICITATION
@@ -123,20 +123,19 @@ OPERATIONS
             || clientWorkedOut := {client} <<| clientWorkedOut
         END;
         
-        // TODO: workout has category
-        addWorkout(workout, category, exercisesInWorkout) =
-        PRE workout : WORKOUT & category : CATEGORY
+        // add null exercise
+        addWorkout(workout, category, numOfExercisesInWorkout, exercisesInWorkout) =
+        PRE workout : WORKOUT & category : CATEGORY & numOfExercisesInWorkout : NAT1
+            & numOfExercisesInWorkout <= maxExercisesInWorkout
             & workouts : FIN(workouts)
             & workout /: workouts
             & card(workouts) < maxWorkouts
-            & exercisesInWorkout : 0..maxExercisesInWorkout --> exercises
-//            & exPush : EXERCISE & exPull : EXERCISE & exLeg : EXERCISE
-//            & exPush : exercises & exerciseHasCategory[{exPush}] = {PUSH}
+            & exercisesInWorkout : 0..numOfExercisesInWorkout --> EXERCISE
+            & ran(exercisesInWorkout) <: exercises
+            & !ex . ( ex : EXERCISE & ex : ran(exercisesInWorkout) => exerciseHasCategory(ex) = category)
         THEN workouts := workouts \/ {workout}
             || workoutHasCategory(workout) := category
             || workoutHasExercise := workoutHasExercise \/ {workout}*ran(exercisesInWorkout)
-//            || workoutHasExercise := workoutHasExercise 
-//                                        \/ {workout |-> exPush, workout |-> exPull, workout |-> exLeg}
         END;
         
         // verificar se esta correto (pois a prova nao foi automaticamente)
@@ -172,15 +171,17 @@ OPERATIONS
             || exerciseHasCategory := {exercise} <<| exerciseHasCategory
         END;
         
-        // TODO: tipar workoutLog?
-        //esta errado, clientHasWorkoout deve ser manipulado
+        // verificar com MARCEL
         workoutLog <-- getWorkoutLog(client) =
-        PRE client : CLIENT
+        PRE 
+             client : CLIENT
             & client : clients
-            & client : dom(clientHasWorkout)
-//            & workoutLog <: WORKOUT
+//            & client : dom(clientWorkedOut)
+            & clientWorkedOut[{client}] : FIN(clientWorkedOut[{client}])
         THEN
-            workoutLog := clientHasWorkout(client)
+            workoutLog := (0..(card(clientWorkedOut[{client}]) )) * (clientWorkedOut[{client}])
+
+//        (0..maxWorkoutsInHistory) * (clientWorkedOut[{client}] \/ dom({0} * (0..(maxWorkoutsInHistory-card(clientWorkedOut[{client}])))))
         END;
         
         
@@ -190,9 +191,13 @@ OPERATIONS
         THEN clientHasSolicitation(client) := YES
         END;
         
-        // validar
-        clientsWithSolicitation <-- getClientsWithWorkoutSolicitations = 
-        clientsWithSolicitation := {cc | cc : dom(clientHasSolicitation) & clientHasSolicitation(cc) = YES};
+//        // validar
+//        clientsWithSolicitation <-- getClientsWithWorkoutSolicitations = 
+//        PRE clientsWithSolicitation : 0..maxClients --> CLIENT
+//        THEN clientsWithSolicitation := {cc | cc : CLIENT & cc : dom(clientHasSolicitation) & clientHasSolicitation(cc) = YES}
+//        END;
+        
+        
         
         // TODO: Add complexity of the workout history size limit
         defineClientWorkouts(client, workoutPush, workoutPull, workoutLeg) =
