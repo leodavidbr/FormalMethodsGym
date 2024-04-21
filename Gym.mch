@@ -47,7 +47,8 @@ PROPERTIES
     & PUSH = 0 & PULL = 1 & LEGS =2
     & NO = 0 & YES = 1
     & SUN=0 & MON=1 & TUE=2 & WED=3 & THR=4 & FRI=5 & SAT=6
-
+    
+    & CLIENT = {0,1,2,3,4,5}
     & CATEGORY = {PUSH, PULL, LEGS}
     & SOLICITATION = {YES, NO}
     & DAY = {SUN,MON,TUE,WED,THR,FRI,SAT}
@@ -176,10 +177,9 @@ OPERATIONS
         PRE 
              client : CLIENT
             & client : clients
-//            & client : dom(clientWorkedOut)
             & clientWorkedOut[{client}] : FIN(clientWorkedOut[{client}])
-        THEN
-            workoutLog := (0..(card(clientWorkedOut[{client}]) )) * (clientWorkedOut[{client}])
+        THEN 
+            workoutLog := (0..(card(clientWorkedOut[{client}])) ) * (clientWorkedOut[{client}])
 
 //        (0..maxWorkoutsInHistory) * (clientWorkedOut[{client}] \/ dom({0} * (0..(maxWorkoutsInHistory-card(clientWorkedOut[{client}])))))
         END;
@@ -198,7 +198,7 @@ OPERATIONS
 //        END;
         
         
-        
+        //            clientHasWorkout := ({client} <<| clientHasWorkout) \/ {client |-> workoutPush, client |-> workoutPull, client |-> workoutLeg} ||
         // TODO: Add complexity of the workout history size limit
         defineClientWorkouts(client, workoutPush, workoutPull, workoutLeg) =
         PRE client : CLIENT & client : clients 
@@ -207,17 +207,20 @@ OPERATIONS
             & workoutPush : workouts & workoutHasCategory[{workoutPush}] = {PUSH}
             & workoutPull : workouts & workoutHasCategory[{workoutPull}] = {PULL}
             & workoutLeg : workouts & workoutHasCategory[{workoutLeg}] = {LEGS}
-        THEN clientHasWorkout := ({client} <<| clientHasWorkout) \/ {client |-> workoutPush, client |-> workoutPull, client |-> workoutLeg} ||
-             clientHasSolicitation(client) := NO
-        END;
+            & workoutPush /= workoutPull & workoutPull /= workoutLeg & workoutPush /= workoutLeg 
+            & clientWorkedOut \/ {client} * clientHasWorkout[{client}] : FIN(clientWorkedOut \/ {client} * clientHasWorkout[{client}])
+            & card((clientWorkedOut \/ {client} * clientHasWorkout[{client}])) < maxWorkoutsInHistory
+        THEN  clientHasWorkout, clientWorkedOut := clientHasWorkout <+ ({client} * {workoutPush, workoutPull, workoutLeg}), clientWorkedOut \/ ({client} * clientHasWorkout[{client}])
+             || clientHasSolicitation(client) := NO
+        END
         
         // TODO: fazer a operacao
-        exercisesOfTheDay <-- getExercisesOfDayOfClient(client, day) =
-        PRE client : CLIENT & client : clients
-            & day : DAY
-            & exercisesOfTheDay : 0..maxExercisesInWorkout +-> EXERCISE
-        THEN clients := {}
-        END
+//        exercisesOfTheDay <-- getExercisesOfDayOfClient(client, day) =
+//        PRE client : CLIENT & client : clients
+//            & day : DAY
+//            & exercisesOfTheDay : 0..maxExercisesInWorkout +-> EXERCISE
+//        THEN clients := {}
+//        END
         
         
         
