@@ -53,9 +53,8 @@ PROPERTIES
     & DAY = {SUN,MON,TUE,WED,THR,FRI,SAT}
     
 VARIABLES
-    timeInDays
     
-    , clients, workouts, exercises
+     clients, workouts, exercises
     
     , clientHasWorkout,
     clientWorkedOut,
@@ -65,9 +64,8 @@ VARIABLES
     workoutHasCategory
 
 INVARIANT
-    timeInDays : INTEGER
     
-    & clients <: CLIENT 
+     clients <: CLIENT 
     & workouts <: WORKOUT
     & exercises <: EXERCISE
     
@@ -90,13 +88,9 @@ INVARIANT
     & !clientx . (clientx : CLIENT & clientx : clients & clientHasSolicitation(clientx) = YES => card(clientHasWorkout[{clientx}]) = exactNumClientWorkouts or card(clientHasWorkout[{clientx}]) = 0)
     // todo cliente que tem treino (sempre exatamente 3) tem um exercício de cada categoria
     & !clientx . (clientx : CLIENT & clientx : clients & card(clientHasWorkout[{clientx}]) = 3 =>  workoutHasCategory[ clientHasWorkout[{clientx}]] = CATEGORY )
-    
-    // 
         
 INITIALISATION
-    timeInDays := 0
-    
-    || clients := {}
+    clients := {}
     || workouts := {}
     || exercises := {}    
     
