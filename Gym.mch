@@ -17,6 +17,13 @@ CONSTANTS
     maxWorkoutsInHistory,
     exactNumClientWorkouts
     
+SETS
+    CLIENT = { xx | xx :NAT};
+    WORKOUT; EXERCISE; 
+    CATEGORY = {PUSH, PULL, LEGS};
+    SOLICITATION = {YES, NO};
+    DAY = {SUN,MON,TUE,WED,THR,FRI,SAT}
+    
 PROPERTIES
     maxClients = 100
     & maxWorkouts = 15
@@ -25,11 +32,6 @@ PROPERTIES
     & maxExercisesInWorkout = 7
     & maxWorkoutsInHistory = 40
     & exactNumClientWorkouts = 3
-SETS
-    CLIENT; WORKOUT; EXERCISE; 
-    CATEGORY = {PUSH, PULL, LEGS};
-    SOLICITATION = {YES, NO};
-    DAY = {SUN,MON,TUE,WED,THR,FRI,SAT}
     
     
 VARIABLES
