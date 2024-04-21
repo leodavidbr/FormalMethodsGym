@@ -144,7 +144,8 @@ OPERATIONS
             || clientHasWorkout := {client} <<| clientHasWorkout
             || clientWorkedOut := {client} <<| clientWorkedOut
         END;
-        
+
+        //add sets, reps and day
         // TODO: workout has category
         //TODO: add sets and reps here
         addWorkout(workout, category, exercisesInWorkout) =
@@ -231,6 +232,8 @@ OPERATIONS
         END;
         
         // TODO: fazer a operacao
+        // sugestion: rename to workout of the day,and it should return the workout, sets and reps
+        // to see the exercices, we are going to create another operation (workout as argument) 
         exercisesOfTheDay <-- getExercisesOfDayOfClient(client, day) =
         PRE client : CLIENT & client : clients
             & day : DAY
