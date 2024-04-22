@@ -127,17 +127,16 @@ OPERATIONS
         PRE workout : WORKOUT & category : CATEGORY & numOfExercisesInWorkout : NAT1
             & numOfExercisesInWorkout <= maxExercisesInWorkout
             & numOfExercisesInWorkout > 0
-            
             & workouts : FIN(workouts)
             & workout /: workouts
             & card(workouts) < maxWorkouts
             & exercisesInWorkout : 0..(numOfExercisesInWorkout -1) --> EXERCISE
-            & ran(exercisesInWorkout) <: exercises
+            & ran(exercisesInWorkout) <: exercises // todos os exs ja estao cadastrados
             & ran(exercisesInWorkout) : FIN(ran(exercisesInWorkout))
             & exercisesInWorkout : FIN(exercisesInWorkout)
-            & card(ran(exercisesInWorkout)) = card(exercisesInWorkout)
-            & card(ran(exercisesInWorkout)) =  numOfExercisesInWorkout
-            & !ex . ( ex : EXERCISE & ex : ran(exercisesInWorkout) => exerciseHasCategory(ex) = category)
+            & card(ran(exercisesInWorkout)) = card(exercisesInWorkout) // nao pode ter ex repetido em exercisesInWorkout
+            & card(ran(exercisesInWorkout)) =  numOfExercisesInWorkout // tamanho de exercisesInWorkout eh numOfExercisesInWorkout
+            & !ex . ( ex : EXERCISE & ex : ran(exercisesInWorkout) => exerciseHasCategory(ex) = category) // todo ex em exercisesInWorkout tem a mesma categoria que o workout tera
             
         THEN workouts, workoutHasCategory, workoutHasExercise  :=
             workouts \/ {workout},
@@ -149,10 +148,9 @@ OPERATIONS
         removeWorkout(workout) =
         PRE workout : WORKOUT & workout : workouts
             & workout /: ran(clientHasWorkout)
-        THEN workouts, workoutHasCategory, clientHasSolicitation, workoutHasExercise  := 
+        THEN workouts, workoutHasCategory, workoutHasExercise  := 
             workouts - {workout}, 
             {workout} <<| workoutHasCategory,
-            clientHasSolicitation \/ clientHasWorkout~[{workout}]*{YES},
             {workout} <<| workoutHasExercise
         END;
         
@@ -185,9 +183,7 @@ OPERATIONS
             & client : clients
             & clientWorkedOut[{client}] : FIN(clientWorkedOut[{client}])
         THEN 
-            workoutLog := (0..(card(clientWorkedOut[{client}])) ) * (clientWorkedOut[{client}])
-
-
+            workoutLog := (0..(card(clientWorkedOut[{client}])-1) ) * (clientWorkedOut[{client}])
         END;
         
         
@@ -205,7 +201,7 @@ OPERATIONS
              clientHasSolicitation(cc) = YES } : FIN({ cc | cc : CLIENT &
              cc : dom(clientHasSolicitation) & clientHasSolicitation(cc) = YES })
 
-        THEN clientsWithSolicitation := (0..(card({cc | cc : CLIENT & cc : dom(clientHasSolicitation) & clientHasSolicitation(cc) = YES})) ) * {cc | cc : CLIENT & cc : dom(clientHasSolicitation) & clientHasSolicitation(cc) = YES}
+        THEN clientsWithSolicitation := (0..(card({cc | cc : CLIENT & cc : dom(clientHasSolicitation) & clientHasSolicitation(cc) = YES})-1) ) * {cc | cc : CLIENT & cc : dom(clientHasSolicitation) & clientHasSolicitation(cc) = YES}
         END;
         
         // FIX: remove duplicity
@@ -216,7 +212,7 @@ OPERATIONS
             & workoutPush : workouts & workoutHasCategory[{workoutPush}] = {PUSH}
             & workoutPull : workouts & workoutHasCategory[{workoutPull}] = {PULL}
             & workoutLeg : workouts & workoutHasCategory[{workoutLeg}] = {LEGS}
-            & workoutPush /= workoutPull & workoutPull /= workoutLeg & workoutPush /= workoutLeg 
+            & workoutPush /= workoutPull & workoutPull /= workoutLeg & workoutPush /= workoutLeg  // redundante
             & clientWorkedOut \/ {client} * clientHasWorkout[{client}] : FIN(clientWorkedOut \/ {client} * clientHasWorkout[{client}])
             & card((clientWorkedOut \/ {client} * clientHasWorkout[{client}])) < maxWorkoutsInHistory
 
