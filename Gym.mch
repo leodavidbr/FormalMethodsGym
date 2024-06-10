@@ -200,7 +200,7 @@ OPERATIONS
                         THEN workoutLog := log
                 END
             ELSE
-                workoutLog := 0..maxWorkoutsInHistory * {0}
+                workoutLog := (0..maxWorkoutsInHistory) * {0}
             END
         END;
         
@@ -228,16 +228,18 @@ OPERATIONS
                             & clientsW |>> {0} : FIN(clientsW |>> {0})
                             & clientHasSolicitation~[{YES}] : FIN(clientHasSolicitation~[{YES}])
                             & card(clientsW |>> {0}) = card(clientHasSolicitation~[{YES}])
-                            // Todos os nao zero (zero sendo um filler) devem aparecer antes dos zeros
                             & ( 
-                                (dom(clientsW |> {0}) ={})
+                                // Redundante, pois o array nunca será vazio nem 100% cheio (considerando so os nao 0). Mas como nao estamos realizando provas, isso garante que max e min nao serao chamados para conjuntos vazios (para o Atelier parar de reclamar).
+                                (dom(clientsW |> {0}) ={} or dom(clientsW |>> {0}) = {})
                                 or
+                                // Todos os nao zero (zero sendo um filler) devem aparecer antes dos zeros
                                 (max(dom(clientsW |>> {0})) < min(dom(clientsW |> {0})))
                               )
                   THEN clientsWithSolicitation := clientsW
                 END
             ELSE
-                clientsWithSolicitation := {}
+                clientsWithSolicitation := (0..maxClients) * {0}
+            END
         END;
         
         // FIX: remove duplicity
