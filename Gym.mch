@@ -183,15 +183,26 @@ OPERATIONS
             & client : clients
             & clientWorkedOut[{client}] : FIN(clientWorkedOut[{client}])
         THEN 
-            ANY log 
-                    WHERE log : 0..maxWorkoutsInHistory --> WORKOUT 
-                        & ran(log |>> {0}) = clientWorkedOut[{client}] 
-                        & log |>> {0} : FIN(log |>> {0})
-                        & card(log |>> {0}) = card(clientWorkedOut[{client}])
-                        // Todos os nao zero (zero sendo um filler) devem aparecer antes dos zeros
-                        & ( (dom(log |> {0}) ={}) or max(dom(log |>> {0})) < min(dom(log |> {0})) )
-                    THEN workoutLog := log
-                    END
+            IF (clientWorkedOut[{client}] /= {}) 
+            THEN
+                ANY log 
+                        WHERE log : 0..maxWorkoutsInHistory --> WORKOUT 
+                            & ran(log |>> {0}) = clientWorkedOut[{client}] 
+                            & log |>> {0} : FIN(log |>> {0})
+                            & card(log |>> {0}) = card(clientWorkedOut[{client}])
+                            
+                            & ( 
+                                    // Redundante, pois o array nunca será vazio nem 100% cheio (considerando so os nao 0). Mas como nao estamos realizando provas, isso garante que max e min nao serao chamados para conjuntos vazios (para o Atelier parar de reclamar).
+                                    (dom(log |>> {0}) = {} or dom(log |> {0}) = {}) 
+                                    or 
+                                    // Todos os nao zero (zero sendo um filler) devem aparecer antes dos zeros
+                                    (max(dom(log |>> {0})) < min(dom(log |> {0})) )
+                              )
+                        THEN workoutLog := log
+                END
+            ELSE
+                workoutLog := {}
+            END
         END;
         
         
