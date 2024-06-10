@@ -140,8 +140,8 @@ OPERATIONS
             
         THEN workouts, workoutHasCategory, workoutHasExercise  :=
             workouts \/ {workout},
-            workoutHasCategory <+ {workout |-> category},
-            workoutHasExercise <+ {workout}*ran(exercisesInWorkout)
+            workoutHasCategory \/ {workout |-> category},
+            workoutHasExercise \/ {workout}*ran(exercisesInWorkout)
         END;
         
         
@@ -175,8 +175,6 @@ OPERATIONS
             || exerciseHasCategory := {exercise} <<| exerciseHasCategory
         END;
         
-
-        // verificar com MARCEL
         workoutLog <-- getWorkoutLog(client) =
         PRE 
              client : CLIENT
@@ -212,7 +210,6 @@ OPERATIONS
         END;
         
 
-        // FIX: remove duplicity
         clientsWithSolicitation <-- getClientsWithWorkoutSolicitations = 
         PRE { cc | cc : CLIENT &
              cc : dom(clientHasSolicitation) &
