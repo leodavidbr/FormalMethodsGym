@@ -52,7 +52,8 @@ VARIABLES
     workoutHasExercise,
     exerciseHasCategory,
     clientHasSolicitation,
-    workoutHasCategory
+    workoutHasCategory,
+    isClientNew
 
 INVARIANT
     
@@ -66,6 +67,7 @@ INVARIANT
     & exerciseHasCategory : exercises --> CATEGORY
     & clientHasSolicitation : clients --> SOLICITATION
     & workoutHasCategory : workouts --> CATEGORY
+    & isClientNew : clients --> SOLICITATION
     
     // limits
     & clients : FIN(clients)
@@ -82,11 +84,18 @@ INVARIANT
     & !workoutx . (workoutx : WORKOUT & workoutx : workouts => card(workoutHasExercise[{workoutx}]) <= maxExercisesInWorkout)
     // Bussines rules
 
-    // todo cliente que não tem solicitação de treino tem 3 treinos
-    & !clientx . (clientx : CLIENT & clientx : clients & (clientHasSolicitation(clientx) = NO) =>
-        card(clientHasWorkout[{clientx}]) = exactNumClientWorkouts)
-    // todo cliente que tem solicitação de treino tem 3 ou 0 treinos
-    & !clientx . (clientx : CLIENT & clientx : clients & clientHasSolicitation(clientx) = YES => card(clientHasWorkout[{clientx}]) = exactNumClientWorkouts or card(clientHasWorkout[{clientx}]) = 0)
+//    // todo cliente que não tem solicitação de treino tem 3 treinos
+//    & !clientx . (clientx : CLIENT & clientx : clients & (clientHasSolicitation(clientx) = NO) =>
+//        card(clientHasWorkout[{clientx}]) = exactNumClientWorkouts)
+//    // todo cliente que tem solicitação de treino tem 3 ou 0 treinos
+//    & !clientx . (clientx : CLIENT & clientx : clients & clientHasSolicitation(clientx) = YES => card(clientHasWorkout[{clientx}]) = exactNumClientWorkouts or card(clientHasWorkout[{clientx}]) = 0)
+    
+    // todo cliente nao novo tem exatamente exactNumClientWorkouts workouts
+    & !clientx . (clientx : CLIENT & clientx : clients & isClientNew[{clientx}] = {NO} => card(clientHasWorkout[{clientx}]) = exactNumClientWorkouts)
+    
+    // todo cliente novo tem 0 workouts
+    & !clientx . (clientx : CLIENT & clientx : clients & isClientNew(clientx) = YES => card(clientHasWorkout[{clientx}]) = 0)
+    
     // todo cliente que tem treino (sempre exatamente 3) tem um exercício de cada categoria
     & !clientx . (clientx : CLIENT & clientx : clients & card(clientHasWorkout[{clientx}]) = 3 =>  workoutHasCategory[ clientHasWorkout[{clientx}]] = CATEGORY )
         
@@ -101,6 +110,7 @@ INITIALISATION
     || exerciseHasCategory := {}
     || clientHasSolicitation := {}
     || workoutHasCategory := {}
+    || isClientNew := {}
     
 OPERATIONS 
         
@@ -109,9 +119,11 @@ OPERATIONS
             & clients : FIN(clients)
             & client /: clients
             & card(clients) < maxClients
-        THEN clients, clientHasSolicitation := 
+        THEN clients, clientHasSolicitation, isClientNew := 
             clients \/ {client},
-            clientHasSolicitation <+ {client |-> YES}
+            clientHasSolicitation <+ {client |-> YES},
+            isClientNew \/ {client |-> YES}
+            
         END;
         
         removeClient(client) =
@@ -251,10 +263,11 @@ OPERATIONS
             & clientWorkedOut \/ {client} * clientHasWorkout[{client}] : FIN(clientWorkedOut \/ {client} * clientHasWorkout[{client}])
             & card((clientWorkedOut \/ {client} * clientHasWorkout[{client}])) < maxWorkoutsInHistory
 
-        THEN  clientHasWorkout, clientWorkedOut, clientHasSolicitation := 
+        THEN  clientHasWorkout, clientWorkedOut, clientHasSolicitation, isClientNew := 
 clientHasWorkout <+ ({client} * {workoutPush, workoutPull, workoutLeg}), 
 clientWorkedOut \/ ({client} * clientHasWorkout[{client}]),
-clientHasSolicitation <+ {client |-> NO}
+clientHasSolicitation <+ {client |-> NO},
+isClientNew <+ {client |-> NO}
         END
         
 END
