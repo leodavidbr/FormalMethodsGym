@@ -183,7 +183,15 @@ OPERATIONS
             & client : clients
             & clientWorkedOut[{client}] : FIN(clientWorkedOut[{client}])
         THEN 
-            workoutLog := (0..(card(clientWorkedOut[{client}])-1) ) * (clientWorkedOut[{client}])
+            ANY log 
+                    WHERE log : 0..maxWorkoutsInHistory --> WORKOUT 
+                        & ran(log |>> {0}) = clientWorkedOut[{client}] 
+                        & log |>> {0} : FIN(log |>> {0})
+                        & card(log |>> {0}) = card(clientWorkedOut[{client}])
+                        // Todos os nao zero (zero sendo um filler) devem aparecer antes dos zeros
+                        & ( (dom(log |> {0}) ={}) or max(dom(log |>> {0})) < min(dom(log |> {0})) )
+                    THEN workoutLog := log
+                    END
         END;
         
         
@@ -201,7 +209,17 @@ OPERATIONS
              clientHasSolicitation(cc) = YES } : FIN({ cc | cc : CLIENT &
              cc : dom(clientHasSolicitation) & clientHasSolicitation(cc) = YES })
 
-        THEN clientsWithSolicitation := (0..(card({cc | cc : CLIENT & cc : dom(clientHasSolicitation) & clientHasSolicitation(cc) = YES})-1) ) * {cc | cc : CLIENT & cc : dom(clientHasSolicitation) & clientHasSolicitation(cc) = YES}
+        THEN 
+            ANY clientsW 
+              WHERE clientsW : 0..maxClients --> CLIENT
+                   & ran(clientsW |>> {0}) = clientHasSolicitation~[{YES}] 
+                        & clientsW |>> {0} : FIN(clientsW |>> {0})
+                        & clientHasSolicitation~[{YES}] : FIN(clientHasSolicitation~[{YES}])
+                        & card(clientsW |>> {0}) = card(clientHasSolicitation~[{YES}])
+                        // Todos os nao zero (zero sendo um filler) devem aparecer antes dos zeros
+                        & ( (dom(clientsW |> {0}) ={}) or max(dom(clientsW |>> {0})) < min(dom(clientsW |> {0})) )
+              THEN clientsWithSolicitation := clientsW
+              END
         END;
         
         // FIX: remove duplicity
