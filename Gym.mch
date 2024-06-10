@@ -38,8 +38,8 @@ PROPERTIES
     & PUSH = 0 & PULL = 1 & LEGS =2
     & NO = 0 & YES = 1
    
-    & CLIENT = {1,2,3,4,5}
-    & WORKOUT = {1,2,3,4,5}
+    & CLIENT = {0,1,2,3,4,5}
+    & WORKOUT = {0,1,2,3,4,5}
     & CATEGORY = {PUSH, PULL, LEGS}
     & SOLICITATION = {YES, NO}
     
