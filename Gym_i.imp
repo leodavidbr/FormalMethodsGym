@@ -44,9 +44,6 @@ INVARIANT
      & 
     r_clientHasWorkout : CLIENT * WORKOUT --> BOOL
     & clientHasWorkout = dom(r_clientHasWorkout |> {TRUE})
-    
-    // cwi : CLIENT*WORKOUT --> 
-// Cwi |> {true} = cw
 
 
 VALUES
@@ -87,27 +84,41 @@ INITIALISATION
     r_isClientNew := CLIENT*{YES};
     r_clientHasWorkout := (CLIENT*WORKOUT)*{FALSE}
 //    
-//    r_clientHasWorkout := {};
 //    r_clientWorkedOut := {};
 //    r_workoutHasExercise := {};
-//    r_exerciseHasCategory := {};
-//    r_clientHasSolicitation := {};
-//    r_workoutHasCategory := {};
-//    r_isClientNew := {}
     
 
 OPERATIONS
-        addClient(client) = skip;
+        // Provas ok (eu acho)
+        addClient(client) = 
+        BEGIN
+            r_clients(client) := TRUE;
+            r_clientHasSolicitation(client) := YES;
+            r_isClientNew(client) := YES
+        END;
+//        clients \/ {client},
+//            clientHasSolicitation <+ {client |-> YES},
+//            isClientNew \/ {client |-> YES}
 
         removeClient(client) = skip;
 
-        addWorkout(workout, category, numOfExercisesInWorkout, exercisesInWorkout) = skip;
+//        addWorkout(workout, category, exercisesInWorkout) = skip;
 
         removeWorkout(workout) = skip;
 
-        addExercise(exercise, category) = skip;
+        // Provas ok (eu acho)
+        addExercise(exercise, category) = 
+        BEGIN
+            r_exercises(exercise) := TRUE;
+            r_exerciseHasCategory(exercise) := category
+        END;
 
-        removeExercise(exercise) = skip;
+        // Provas ok (eu acho)
+        removeExercise(exercise) = 
+        BEGIN
+            r_exercises(exercise) := FALSE
+        END;
+
         
         workoutLog <-- getWorkoutLog(client) = skip;
         
