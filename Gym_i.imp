@@ -1,0 +1,119 @@
+IMPLEMENTATION Gym_i
+REFINES Gym
+
+CONCRETE_VARIABLES
+    
+     r_clients
+     ,r_workouts
+     ,r_exercises
+    
+    , r_clientHasWorkout
+//    ,r_clientWorkedOut
+//    ,r_workoutHasExercise
+    ,r_exerciseHasCategory
+    ,r_clientHasSolicitation
+    ,r_workoutHasCategory
+    ,r_isClientNew
+
+INVARIANT
+    r_clients : CLIENT --> BOOL 
+    & clients = dom(r_clients |> {TRUE}) 
+    &
+    r_workouts : WORKOUT --> BOOL
+    & workouts = dom(r_workouts |> {TRUE})
+    &
+    r_exercises: EXERCISE --> BOOL 
+    & exercises = dom(r_exercises |> {TRUE})
+    &
+    r_exerciseHasCategory : EXERCISE --> CATEGORY 
+    & !ex. ((ex : EXERCISE & ex : exercises) => 
+        (r_exerciseHasCategory(ex) = exerciseHasCategory(ex)))
+    &
+    r_clientHasSolicitation : CLIENT --> SOLICITATION
+    & !cl. ((cl : CLIENT & cl : clients) => 
+        (r_clientHasSolicitation(cl) = clientHasSolicitation(cl)))
+    &
+    r_workoutHasCategory : WORKOUT --> CATEGORY
+    & !wr. ((wr : WORKOUT & wr : workouts) => 
+        (r_workoutHasCategory(wr) = workoutHasCategory(wr)))
+    &
+     r_isClientNew : CLIENT --> SOLICITATION
+    & !cl. ((cl : CLIENT & cl : clients) => 
+        (r_workoutHasCategory(cl) = workoutHasCategory(cl)))
+    
+     & 
+    r_clientHasWorkout : CLIENT * WORKOUT --> BOOL
+    & clientHasWorkout = dom(r_clientHasWorkout |> {TRUE})
+    
+    // cwi : CLIENT*WORKOUT --> 
+// Cwi |> {true} = cw
+
+
+VALUES
+    maxClients = 100;
+    maxWorkouts = 15;
+    maxExercises = 30;
+    
+    maxExercisesInWorkout = 7;
+    maxWorkoutsInHistory = 40;
+    exactNumClientWorkouts = 3;
+    
+    CLIENT = 0..5;
+    WORKOUT = 0..5;
+    EXERCISE = 0..5; 
+    CATEGORY = 0..2;
+    
+    
+    PUSH = 0;
+    PULL = 1;
+    LEGS = 2; 
+    NO = 0; 
+    YES = 1;
+    SOLICITATION = 0..1;
+
+    NULL = 0;
+    ANYEXERCISE = 0;
+    ANYWORKOUT = 0;
+    
+    VALID_CLIENT = 1..5
+
+INITIALISATION
+    r_clients := CLIENT*{FALSE};
+    r_workouts := WORKOUT*{FALSE};
+    r_exercises := EXERCISE*{FALSE};
+    r_exerciseHasCategory := EXERCISE*{ANYEXERCISE};
+    r_clientHasSolicitation := CLIENT*{NO};
+    r_workoutHasCategory := WORKOUT*{ANYWORKOUT};
+    r_isClientNew := CLIENT*{YES};
+    r_clientHasWorkout := (CLIENT*WORKOUT)*{FALSE}
+//    
+//    r_clientHasWorkout := {};
+//    r_clientWorkedOut := {};
+//    r_workoutHasExercise := {};
+//    r_exerciseHasCategory := {};
+//    r_clientHasSolicitation := {};
+//    r_workoutHasCategory := {};
+//    r_isClientNew := {}
+    
+
+OPERATIONS
+        addClient(client) = skip;
+
+        removeClient(client) = skip;
+
+        addWorkout(workout, category, numOfExercisesInWorkout, exercisesInWorkout) = skip;
+
+        removeWorkout(workout) = skip;
+
+        addExercise(exercise, category) = skip;
+
+        removeExercise(exercise) = skip;
+        
+        workoutLog <-- getWorkoutLog(client) = skip;
+        
+        askForWorkout(client) = skip;
+
+        clientsWithSolicitation <-- getClientsWithWorkoutSolicitations = skip;
+        
+        defineClientWorkouts(client, workoutPush, workoutPull, workoutLeg) = skip
+ END
