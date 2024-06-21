@@ -131,6 +131,7 @@ INITIALISATION
     
 OPERATIONS 
         
+        // Provas OK (Leo)
         addClient(client) =
         PRE client : CLIENT
             & clients : FIN(clients)
@@ -143,44 +144,52 @@ OPERATIONS
             
         END;
         
+        // Provas OK (Leo)
         removeClient(client) =
         PRE client : CLIENT & client : clients
-        THEN clients, clientHasSolicitation, clientHasWorkout, clientWorkedOut := 
+        THEN clients, clientHasSolicitation, clientHasWorkout, clientWorkedOut, isClientNew := 
             clients - {client},
             {client} <<| clientHasSolicitation,
             {client} <<| clientHasWorkout,
-            {client} <<| clientWorkedOut
+            {client} <<| clientWorkedOut,
+            {client} <<| isClientNew
         END;
         
         // TODO: exercisesInWorkout NULL
-        addWorkout(workout, category, numOfExercisesInWorkout, exercisesInWorkout) =
-        PRE workout : WORKOUT & category : CATEGORY & numOfExercisesInWorkout : NAT1
-            & numOfExercisesInWorkout <= maxExercisesInWorkout
-            & numOfExercisesInWorkout > 0
-            & workouts : FIN(workouts)
-            & workout /: workouts
-            & card(workouts) < maxWorkouts
-            // typing exercisesInWorkout init
-            & exercisesInWorkout : 0..(maxExercisesInWorkout -1) --> EXERCISE
-//            & 
-            & ran(exercisesInWorkout) <: exercises // todos os exs ja estao cadastrados
-            & ran(exercisesInWorkout) : FIN(ran(exercisesInWorkout))
-            & exercisesInWorkout : FIN(exercisesInWorkout)
-            & card(ran(exercisesInWorkout)) = card(exercisesInWorkout) // nao pode ter ex repetido em exercisesInWorkout
-            & card(ran(exercisesInWorkout)) =  numOfExercisesInWorkout // tamanho de exercisesInWorkout eh numOfExercisesInWorkout
-            & !ex . ( ex : EXERCISE & ex : ran(exercisesInWorkout) => exerciseHasCategory(ex) = category) // todo ex em exercisesInWorkout tem a mesma categoria que o workout tera
-            // typing exercisesInWorkout end
-            
-        THEN workouts, workoutHasCategory, workoutHasExercise  :=
-            workouts \/ {workout},
-            workoutHasCategory \/ {workout |-> category},
-            workoutHasExercise \/ {workout}*ran(exercisesInWorkout)
-        END;
+        // TODO?: analisar se retirada de numOfExercisesInWorkout esta ok
+//        addWorkout(workout, category, numOfExercisesInWorkout, exercisesInWorkout) =
+//        addWorkout(workout, category, exercisesInWorkout) =
+//        PRE workout : WORKOUT & category : CATEGORY 
+////            & numOfExercisesInWorkout : NAT1
+////            & numOfExercisesInWorkout <= maxExercisesInWorkout
+////            & numOfExercisesInWorkout > 0
+//            & workouts : FIN(workouts)
+//            & workout /: workouts
+//            & card(workouts) < maxWorkouts
+//            // ------ typing exercisesInWorkout init ------ 
+//            & exercisesInWorkout : EXERCISE --> BOOL
+////            & exercisesInWorkout : 0..(maxExercisesInWorkout -1) --> EXERCISE
+////            & 
+//            & dom(exercisesInWorkout |> {TRUE}) <: exercises // todos os exs ja estao cadastrados
+//            & exercisesInWorkout |> {TRUE} : FIN(exercisesInWorkout |> {TRUE})
+//            & card(exercisesInWorkout |> {TRUE}) <= maxExercisesInWorkout
+////            & ran(exercisesInWorkout) : FIN(ran(exercisesInWorkout))
+////            & exercisesInWorkout : FIN(exercisesInWorkout)
+////            & card(exercisesInWorkout |> {TRUE}) =  numOfExercisesInWorkout // tamanho de exercisesInWorkout eh numOfExercisesInWorkout
+//            & !ex . ( ex : EXERCISE & ex : dom(exercisesInWorkout |> {TRUE}) => exerciseHasCategory(ex) = category) // todo ex em exercisesInWorkout tem a mesma categoria que o workout tera
+//            // ------ typing exercisesInWorkout end ------
+//            
+//        THEN workouts, workoutHasCategory, workoutHasExercise  :=
+//            workouts \/ {workout},
+//            workoutHasCategory \/ {workout |-> category},
+//            workoutHasExercise \/ {workout}*dom(exercisesInWorkout |> {TRUE})
+//        END;
         
         
         removeWorkout(workout) =
         PRE workout : WORKOUT & workout : workouts
             & workout /: ran(clientHasWorkout)
+            & workout /= NULL
         THEN workouts, workoutHasCategory, workoutHasExercise  := 
             workouts - {workout}, 
             {workout} <<| workoutHasCategory,
@@ -193,6 +202,7 @@ OPERATIONS
             & category : CATEGORY
             & exercises : FIN(exercises)
             & exercise /: exercises
+            & exercise /= NULL
             & card(exercises) < maxExercises
         THEN exercises := exercises \/ {exercise}
             || exerciseHasCategory := exerciseHasCategory \/ {exercise|-> category}
@@ -203,6 +213,7 @@ OPERATIONS
         PRE exercise : EXERCISE
             & exercise : exercises
             & exercise /: ran(workoutHasExercise)
+            & exercise /= NULL
         THEN
             exercises := exercises - {exercise}
             || exerciseHasCategory := {exercise} <<| exerciseHasCategory
@@ -212,6 +223,7 @@ OPERATIONS
         PRE 
              client : CLIENT
             & client : clients
+            & client /= NULL
             & clientWorkedOut[{client}] : FIN(clientWorkedOut[{client}])
         THEN 
             IF (clientWorkedOut[{client}] /= {}) 
@@ -238,7 +250,7 @@ OPERATIONS
         
         askForWorkout(client) = 
         PRE client : CLIENT & client : clients
-            & clientHasSolicitation(client) = NO
+            & client /= NULL
         THEN clientHasSolicitation(client) := YES
         END;
         
@@ -272,17 +284,19 @@ OPERATIONS
             END
         END;
         
-        // FIX: remove duplicity
+        // PROVAS OK (Leo)
+        // TODO: Seria bom tirar a parte de maxWorkoutsInHistory da precondição e colocar como if no THEN
         defineClientWorkouts(client, workoutPush, workoutPull, workoutLeg) =
         PRE client : CLIENT & client : clients 
             & clientHasSolicitation(client) = YES
             & workoutPush : WORKOUT & workoutPull : WORKOUT & workoutLeg : WORKOUT
+            & workoutPush /= NULL & workoutPull /= NULL & workoutLeg /= NULL
             & workoutPush : workouts & workoutHasCategory[{workoutPush}] = {PUSH}
             & workoutPull : workouts & workoutHasCategory[{workoutPull}] = {PULL}
             & workoutLeg : workouts & workoutHasCategory[{workoutLeg}] = {LEGS}
             & workoutPush /= workoutPull & workoutPull /= workoutLeg & workoutPush /= workoutLeg  // redundante
             & clientWorkedOut \/ {client} * clientHasWorkout[{client}] : FIN(clientWorkedOut \/ {client} * clientHasWorkout[{client}])
-            & card((clientWorkedOut \/ {client} * clientHasWorkout[{client}])) < maxWorkoutsInHistory
+            & card(clientWorkedOut \/ {client} * clientHasWorkout[{client}]) < maxWorkoutsInHistory
 
         THEN  clientHasWorkout, clientWorkedOut, clientHasSolicitation, isClientNew := 
 clientHasWorkout <+ ({client} * {workoutPush, workoutPull, workoutLeg}), 
