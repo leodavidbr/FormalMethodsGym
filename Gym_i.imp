@@ -220,7 +220,41 @@ OPERATIONS
         r_clientHasSolicitation(client) := TRUE
     END;
     
-    //        workoutLog <-- getWorkoutLog(client) = skip;
+    workoutLog <-- getWorkoutLog(client) = 
+    BEGIN
+        // !workoutx log(workoutx) <=> r_clientWorkedOut(client, workoutx)
+        VAR log, ww IN
+            ww := 0;
+            log := WORKOUT*{FALSE}; 
+            
+            WHILE ww <= r_maximumWorkout DO
+                log(ww) := r_clientWorkedOut(client, ww);
+                ww := ww + 1
+            INVARIANT
+                ww : 0..(r_maximumWorkout +1)
+                & r_clientWorkedOut : CLIENT * WORKOUT --> BOOL
+                & log : WORKOUT --> BOOL
+                & dom(log |> {TRUE}) = (UNION(xx).( (xx : 0..(ww-1) & r_clientWorkedOut(client, xx) = TRUE ) | {xx} ))
+//                & !workoutx. (workoutx : 0..(ww-1) 
+//                    => log(workoutx) = r_clientWorkedOut(client, workoutx))
+            VARIANT
+                SZE_WORKOUT - ww +2
+            END;
+            workoutLog := log
+        END
+    END;
+//    PRE 
+//         client : CLIENT
+//        & client : clients
+//        & client /= NULL
+//        & clientWorkedOut[{client}] : FIN(clientWorkedOut[{client}])
+//    THEN 
+//        ANY log 
+//                WHERE log : WORKOUT --> BOOL 
+//                    & dom(log |> {TRUE}) = clientWorkedOut[{client}] 
+//                THEN workoutLog := log
+//        END
+//    END;
     
     //        clientsWithSolicitation <-- getClientsWithWorkoutSolicitations = skip;
     
