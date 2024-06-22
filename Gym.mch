@@ -21,8 +21,10 @@ CONSTANTS
     NULL,
     ANYEXERCISE,
     ANYWORKOUT,
-    
-    VALID_CLIENT
+
+    SZE_CLIENT,
+    SZE_WORKOUT,
+    SZE_EXERCISE
 
 PROPERTIES
     maxClients = 100
@@ -39,11 +41,16 @@ PROPERTIES
     & CATEGORY <: 0..2
     & SOLICITATION = BOOL
     
+    // tem que ter pelo menos NULL (0) e mais um; e tem que ser menor que o tamanho max
+    & SZE_CLIENT : NAT & SZE_CLIENT >= 2 & SZE_CLIENT < MAXINT
+    & SZE_WORKOUT : NAT & SZE_WORKOUT >= 2 & SZE_WORKOUT < MAXINT
+    & SZE_EXERCISE : NAT & SZE_EXERCISE >= 2 & SZE_EXERCISE < MAXINT
     
     & PUSH = 0 & PULL = 1 & LEGS = 2
     
-    & CLIENT = 0..5
-    & WORKOUT = 0..5
+    & CLIENT = 0..(SZE_CLIENT-1)
+    & WORKOUT = 0..(SZE_WORKOUT-1)
+    & EXERCISE = 0..(SZE_EXERCISE-1)
     & CATEGORY = {PUSH, PULL, LEGS}
     
     & NULL = 0
@@ -51,12 +58,6 @@ PROPERTIES
     & ANYEXERCISE : EXERCISE
     & ANYWORKOUT : WORKOUT
     
-//    & VALID_CLIENT = CLIENT - {NULL}
-    
-    & VALID_CLIENT <: CLIENT
-    & CLIENT = VALID_CLIENT \/ {NULL}
-    & card(VALID_CLIENT) +1 = card(CLIENT) 
-//    & VALID_CLIENT
 VARIABLES
     
      clients, workouts, exercises

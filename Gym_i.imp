@@ -15,7 +15,6 @@ CONCRETE_VARIABLES
     ,r_workoutHasCategory
     ,r_isClientNew
     
-    , r_szeClient
 
 INVARIANT
     r_clients : CLIENT --> BOOL 
@@ -58,7 +57,6 @@ INVARIANT
     & !(wr, ex) .( (wr : WORKOUT  & ex : EXERCISE & wr : workouts & ex : exercises) 
     => ( ex : workoutHasExercise[{wr}] <=> (r_workoutHasExercise(wr, ex) = TRUE) ) )
 
-    & r_szeClient = card(CLIENT)
 
 VALUES
     maxClients = 100;
@@ -69,9 +67,13 @@ VALUES
     maxWorkoutsInHistory = 40;
     exactNumClientWorkouts = 3;
     
-    CLIENT = 0..5;
-    WORKOUT = 0..5;
-    EXERCISE = 0..5; 
+    SZE_CLIENT = 5;
+    SZE_WORKOUT = 5;
+    SZE_EXERCISE = 5;
+    
+    CLIENT = 0..(SZE_CLIENT-1);
+    WORKOUT = 0..(SZE_WORKOUT-1);
+    EXERCISE = 0..(SZE_EXERCISE-1); 
     CATEGORY = 0..2;
     
     
@@ -82,9 +84,8 @@ VALUES
 
     NULL = 0;
     ANYEXERCISE = 0;
-    ANYWORKOUT = 0;
+    ANYWORKOUT = 0
     
-    VALID_CLIENT = 1..5
 
 INITIALISATION
     r_clients := CLIENT*{FALSE};
@@ -96,9 +97,8 @@ INITIALISATION
     r_isClientNew := CLIENT*{TRUE};
     r_clientHasWorkout := (CLIENT*WORKOUT)*{FALSE};
     r_clientWorkedOut := (CLIENT*WORKOUT)*{FALSE};
-    r_workoutHasExercise := (WORKOUT*EXERCISE)*{FALSE};
+    r_workoutHasExercise := (WORKOUT*EXERCISE)*{FALSE}
     
-    r_szeClient := 6
 
 OPERATIONS
 
@@ -112,12 +112,16 @@ OPERATIONS
             //!workoutx r_clientHasWorkout(client*workoutx) = FALSE
             VAR nn IN
                 nn := 0;
-                WHILE nn <= r_szeClient DO
-                    r_clientHasWorkout(client, nn) := FALSE
+                WHILE nn <= SZE_CLIENT-1 DO
+                    r_clientHasWorkout(client, nn) := FALSE;
+                    nn := nn + 1;
                 INVARIANT
-                    !workoutx. (workoutx : 0..nn => r_clientHasWorkout(client, workoutx) = FALSE)
+                    r_clientHasWorkout : CLIENT * WORKOUT --> BOOL
+                    & nn : 0..SZE_CLIENT
+                    & !workoutx. (workoutx : 0..(nn-1) & (client |-> workoutx : dom(r_clientHasWorkout)) 
+                        => r_clientHasWorkout(client, workoutx) = FALSE)
                 VARIANT
-                    r_szeClient +2 - nn
+                    SZE_CLIENT - nn +2
                 END
             END
         END;
