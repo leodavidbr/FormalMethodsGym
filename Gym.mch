@@ -18,6 +18,8 @@ CONSTANTS
     exactNumClientWorkouts,
     PUSH, PULL, LEGS,
     
+    YES, NO,
+    
     NULL,
     ANYEXERCISE,
     ANYWORKOUT,
@@ -39,14 +41,21 @@ PROPERTIES
     & WORKOUT <: NAT
     & EXERCISE <: NAT
     & CATEGORY <: 0..2
-    & SOLICITATION = BOOL
+    & SOLICITATION <: NAT
+    & card(SOLICITATION) = 2
     
     // tem que ter pelo menos NULL (0) e mais um; e tem que ser menor que o tamanho max
-    & SZE_CLIENT : NAT & SZE_CLIENT >= 2 & SZE_CLIENT < MAXINT
-    & SZE_WORKOUT : NAT & SZE_WORKOUT >= 2 & SZE_WORKOUT < MAXINT
-    & SZE_EXERCISE : NAT & SZE_EXERCISE >= 2 & SZE_EXERCISE < MAXINT
+    & SZE_CLIENT : NAT1 & SZE_CLIENT >= 2 & SZE_CLIENT < MAXINT
+    & SZE_WORKOUT : NAT1 & SZE_WORKOUT >= 2 & SZE_WORKOUT < MAXINT
+    & SZE_EXERCISE : NAT1 & SZE_EXERCISE >= 2 & SZE_EXERCISE < MAXINT
     
     & PUSH = 0 & PULL = 1 & LEGS = 2
+    
+    & YES : NAT & NO : NAT
+    & YES /= NO 
+    & YES = 1 & NO = 0
+    
+    & SOLICITATION = NO..YES
     
     & CLIENT = 0..(SZE_CLIENT-1)
     & WORKOUT = 0..(SZE_WORKOUT-1)
@@ -82,7 +91,7 @@ INVARIANT
     & exerciseHasCategory : exercises --> CATEGORY
     & clientHasSolicitation : clients --> SOLICITATION
     & workoutHasCategory : workouts --> CATEGORY
-    & isClientNew : clients --> SOLICITATION
+    & isClientNew : clients --> BOOL
     
     // limits
     & clients : FIN(clients)
@@ -137,7 +146,7 @@ OPERATIONS
             & card(clients) < maxClients
         THEN clients, clientHasSolicitation, isClientNew := 
             clients \/ {client},
-            clientHasSolicitation <+ {client |-> TRUE},
+            clientHasSolicitation <+ {client |-> YES},
             isClientNew \/ {client |-> TRUE}
             
         END;
@@ -221,72 +230,72 @@ OPERATIONS
         askForWorkout(client) = 
         PRE client : CLIENT & client : clients
             & client /= NULL
-        THEN clientHasSolicitation(client) := TRUE
+        THEN clientHasSolicitation(client) := YES
         END;
         
-        workoutLog <-- getWorkoutLog(client) =
-        PRE 
-             client : CLIENT
-            & client : clients
-            & client /= NULL
-            & clientWorkedOut[{client}] : FIN(clientWorkedOut[{client}])
-        THEN 
-            IF (clientWorkedOut[{client}] /= {}) 
-            THEN
-                ANY log 
-                        WHERE log : 0..maxWorkoutsInHistory --> WORKOUT 
-                            & ran(log |>> {NULL}) = clientWorkedOut[{client}] 
-                            & log |>> {NULL} : FIN(log |>> {NULL})
-                            & card(log |>> {NULL}) = card(clientWorkedOut[{client}])
-                            & ( 
-                                    // Redundante, pois o array nunca será vazio nem 100% cheio (considerando so os nao NULL). Mas como nao estamos realizando provas, isso garante que max e min nao serao chamados para conjuntos vazios (para o Atelier parar de reclamar).
-                                    (dom(log |>> {NULL}) = {} or dom(log |> {NULL}) = {}) 
-                                    or 
-                                    // Todos os nao NULL (NULL sendo um filler) devem aparecer antes dos NULL
-                                    (max(dom(log |>> {NULL})) < min(dom(log |> {NULL})) )
-                              )
-                        THEN workoutLog := log
-                END
-            ELSE
-                workoutLog := (0..maxWorkoutsInHistory) * {NULL}
-            END
-        END;
+//        workoutLog <-- getWorkoutLog(client) =
+//        PRE 
+//             client : CLIENT
+//            & client : clients
+//            & client /= NULL
+//            & clientWorkedOut[{client}] : FIN(clientWorkedOut[{client}])
+//        THEN 
+//            IF (clientWorkedOut[{client}] /= {}) 
+//            THEN
+//                ANY log 
+//                        WHERE log : 0..maxWorkoutsInHistory --> WORKOUT 
+//                            & ran(log |>> {NULL}) = clientWorkedOut[{client}] 
+//                            & log |>> {NULL} : FIN(log |>> {NULL})
+//                            & card(log |>> {NULL}) = card(clientWorkedOut[{client}])
+//                            & ( 
+//                                    // Redundante, pois o array nunca será vazio nem 100% cheio (considerando so os nao NULL). Mas como nao estamos realizando provas, isso garante que max e min nao serao chamados para conjuntos vazios (para o Atelier parar de reclamar).
+//                                    (dom(log |>> {NULL}) = {} or dom(log |> {NULL}) = {}) 
+//                                    or 
+//                                    // Todos os nao NULL (NULL sendo um filler) devem aparecer antes dos NULL
+//                                    (max(dom(log |>> {NULL})) < min(dom(log |> {NULL})) )
+//                              )
+//                        THEN workoutLog := log
+//                END
+//            ELSE
+//                workoutLog := (0..maxWorkoutsInHistory) * {NULL}
+//            END
+//        END;
         
 
-        clientsWithSolicitation <-- getClientsWithWorkoutSolicitations = 
-        PRE { cc | cc : CLIENT &
-             cc : dom(clientHasSolicitation) &
-             clientHasSolicitation(cc) = TRUE } : FIN({ cc | cc : CLIENT &
-             cc : dom(clientHasSolicitation) & clientHasSolicitation(cc) = TRUE })
-
-        THEN 
-            IF (clientHasSolicitation~[{TRUE}] /= {})
-            THEN
-                ANY clientsW 
-                  WHERE clientsW : 0..maxClients --> CLIENT
-                       & ran(clientsW |>> {NULL}) = clientHasSolicitation~[{TRUE}] 
-                            & clientsW |>> {NULL} : FIN(clientsW |>> {NULL})
-                            & clientHasSolicitation~[{TRUE}] : FIN(clientHasSolicitation~[{TRUE}])
-                            & card(clientsW |>> {NULL}) = card(clientHasSolicitation~[{TRUE}])
-                            & ( 
-                                // Redundante, pois o array nunca será vazio nem 100% cheio (considerando so os nao NULL). Mas como nao estamos realizando provas, isso garante que max e min nao serao chamados para conjuntos vazios (para o Atelier parar de reclamar).
-                                (dom(clientsW |> {NULL}) ={} or dom(clientsW |>> {NULL}) = {})
-                                or
-                                // Todos os nao NULL (NULL sendo um filler) devem aparecer antes dos NULL
-                                (max(dom(clientsW |>> {NULL})) < min(dom(clientsW |> {NULL})))
-                              )
-                  THEN clientsWithSolicitation := clientsW
-                END
-            ELSE
-                clientsWithSolicitation := (0..maxClients) * {NULL}
-            END
-        END;
+//        clientsWithSolicitation <-- getClientsWithWorkoutSolicitations = 
+//        PRE { cc | cc : CLIENT &
+//             cc : dom(clientHasSolicitation) &
+//             clientHasSolicitation(cc) = YES } : FIN({ cc | cc : CLIENT &
+//             cc : dom(clientHasSolicitation) & clientHasSolicitation(cc) = YES })
+//
+//        THEN 
+//            IF (clientHasSolicitation~[{YES}] /= {})
+//            THEN
+//                ANY clientsW 
+//                  WHERE clientsW : 0..maxClients --> CLIENT
+//                       & ran(clientsW |>> {NULL}) = clientHasSolicitation~[{YES}] 
+//                            & clientsW |>> {NULL} : FIN(clientsW |>> {NULL})
+//                            & clientHasSolicitation~[{YES}] : FIN(clientHasSolicitation~[{YES}])
+//                            & card(clientsW |>> {NULL}) = card(clientHasSolicitation~[{YES}])
+//                            & ( 
+//                                // Redundante, pois o array nunca será vazio nem 100% cheio (considerando so os nao NULL). Mas como nao estamos realizando provas, isso garante que max e min nao serao chamados para conjuntos vazios (para o Atelier parar de reclamar).
+//                                (dom(clientsW |> {NULL}) ={} or dom(clientsW |>> {NULL}) = {})
+//                                or
+//                                // Todos os nao NULL (NULL sendo um filler) devem aparecer antes dos NULL
+//                                (max(dom(clientsW |>> {NULL})) < min(dom(clientsW |> {NULL})))
+//                              )
+//                  THEN clientsWithSolicitation := clientsW
+//                END
+//            ELSE
+//                clientsWithSolicitation := (0..maxClients) * {NULL}
+//            END
+//        END;
         
         // PROVAS OK (Leo)
         // TODO: Seria bom tirar a parte de maxWorkoutsInHistory da precondição e colocar como if no THEN
         defineClientWorkouts(client, workoutPush, workoutPull, workoutLeg) =
         PRE client : CLIENT & client : clients 
-            & clientHasSolicitation(client) = TRUE
+            & clientHasSolicitation(client) = YES
             & workoutPush : WORKOUT & workoutPull : WORKOUT & workoutLeg : WORKOUT
             & workoutPush /= NULL & workoutPull /= NULL & workoutLeg /= NULL
             & workoutPush : workouts & workoutHasCategory[{workoutPush}] = {PUSH}
@@ -299,7 +308,7 @@ OPERATIONS
         THEN  clientHasWorkout, clientWorkedOut, clientHasSolicitation, isClientNew := 
 clientHasWorkout <+ ({client} * {workoutPush, workoutPull, workoutLeg}), 
 clientWorkedOut \/ ({client} * clientHasWorkout[{client}]),
-clientHasSolicitation <+ {client |-> FALSE},
+clientHasSolicitation <+ {client |-> NO},
 isClientNew <+ {client |-> FALSE}
         END
         
