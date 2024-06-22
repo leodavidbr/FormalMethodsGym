@@ -110,11 +110,13 @@ OPERATIONS
             r_clientHasSolicitation(client) := TRUE;
             r_isClientNew(client) := TRUE;
             //!workoutx r_clientHasWorkout(client*workoutx) = FALSE
-            VAR nn IN
+            VAR nn, maxClient IN
                 nn := 0;
-                WHILE nn <= SZE_CLIENT-1 DO
+                maxClient := SZE_CLIENT-1;
+                
+                WHILE nn <= maxClient DO
                     r_clientHasWorkout(client, nn) := FALSE;
-                    nn := nn + 1;
+                    nn := nn + 1
                 INVARIANT
                     r_clientHasWorkout : CLIENT * WORKOUT --> BOOL
                     & nn : 0..SZE_CLIENT
