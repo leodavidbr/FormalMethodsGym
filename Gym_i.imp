@@ -4,12 +4,19 @@ REFINES Gym
 CONSTANTS
     r_maximumClient,
     r_maximumWorkout,
-    r_maximumExercise
+    r_maximumExercise,
+    r_maximumCategory
     
 PROPERTIES
     r_maximumClient = SZE_CLIENT - 1
     & r_maximumWorkout = SZE_WORKOUT - 1
     & r_maximumExercise = SZE_EXERCISE -1
+    & r_maximumCategory = SZE_CATEGORY -1
+    
+    & r_maximumClient : CLIENT
+    & r_maximumWorkout : WORKOUT
+    & r_maximumExercise : EXERCISE
+    & r_maximumCategory : CATEGORY
     
 CONCRETE_VARIABLES
     
@@ -41,7 +48,7 @@ INVARIANT
     & !ex. ((ex : EXERCISE & ex : exercises) => 
         (r_exerciseHasCategory(ex) = exerciseHasCategory(ex)))
     &
-    r_clientHasSolicitation : CLIENT --> SOLICITATION
+    r_clientHasSolicitation : CLIENT --> BOOL
     & !cl. ((cl : CLIENT & cl : clients) => 
         (r_clientHasSolicitation(cl) = clientHasSolicitation(cl)))
     &
@@ -68,8 +75,6 @@ INVARIANT
     & !(wr, ex) .( (wr : WORKOUT  & ex : EXERCISE & wr : workouts & ex : exercises) 
         => ( ex : workoutHasExercise[{wr}] <=> (r_workoutHasExercise(wr, ex) = TRUE) ) )
     
-    //    & r_maximumClient = SZE_CLIENT -1
-    
     
     
 VALUES
@@ -84,39 +89,37 @@ VALUES
     SZE_CLIENT = 5;
     SZE_WORKOUT = 5;
     SZE_EXERCISE = 5;
+    SZE_CATEGORY = 3;
     
     r_maximumClient = SZE_CLIENT - 1;
     r_maximumWorkout = SZE_WORKOUT - 1;
     r_maximumExercise = SZE_EXERCISE - 1;
+    r_maximumCategory = SZE_CATEGORY - 1;
     
     
     CLIENT = 0..r_maximumClient;
     WORKOUT = 0..r_maximumWorkout;
     EXERCISE = 0..r_maximumExercise; 
-    CATEGORY = 0..2;
+    CATEGORY = 0..r_maximumCategory;
     
     
     PUSH = 0;
     PULL = 1;
     LEGS = 2; 
     
-    YES = 1; 
-    NO = 0;
-    
-    SOLICITATION = NO..YES;
-    
     NULL = 0;
     ANYEXERCISE = 0;
-    ANYWORKOUT = 0
+    ANYWORKOUT = 0;
+    ANYCATEGORY = 0
     
     
 INITIALISATION
     r_clients := CLIENT*{FALSE};
     r_workouts := WORKOUT*{FALSE};
     r_exercises := EXERCISE*{FALSE};
-    r_exerciseHasCategory := EXERCISE*{ANYEXERCISE};
-    r_clientHasSolicitation := CLIENT*{NO};
-    r_workoutHasCategory := WORKOUT*{ANYWORKOUT};
+    r_exerciseHasCategory := EXERCISE*{ANYCATEGORY};
+    r_clientHasSolicitation := CLIENT*{FALSE};
+    r_workoutHasCategory := WORKOUT*{ANYCATEGORY};
     r_isClientNew := CLIENT*{TRUE};
     r_clientHasWorkout := (CLIENT*WORKOUT)*{FALSE};
     r_clientWorkedOut := (CLIENT*WORKOUT)*{FALSE};
@@ -127,23 +130,18 @@ OPERATIONS
     
     // OK (acho)
     addClient(client) = 
-    BEGIN
-        r_clients(client) := TRUE;
-        r_clientHasSolicitation(client) := YES;
-        r_isClientNew(client) := TRUE;
+    BEGIN        
         // !workoutx r_clientHasWorkout(client*workoutx) = FALSE
         // Na pratica so precisa de !workoutx : workouts, mas assim eh mais facil e da certo
-        VAR ww, maximumWorkout IN
+        VAR ww IN
             ww := 0;
-            maximumWorkout := SZE_WORKOUT-1; 
-            WHILE ww <= maximumWorkout DO
+            WHILE ww <= r_maximumWorkout DO
                 r_clientHasWorkout(client, ww) := FALSE;
                 ww := ww + 1
             INVARIANT
-                r_clientHasWorkout : CLIENT * WORKOUT --> BOOL
-                & ww : 0..SZE_WORKOUT
+                ww : 0..(r_maximumWorkout +1)
+                & r_clientHasWorkout : CLIENT * WORKOUT --> BOOL
                 & !workoutx. (workoutx : 0..(ww-1) 
-                    //                        & (client |-> workoutx : dom(r_clientHasWorkout)) 
                     => r_clientHasWorkout(client, workoutx) = FALSE)
             VARIANT
                 SZE_WORKOUT - ww +2
@@ -151,22 +149,23 @@ OPERATIONS
         END;
         
         //!workoutx r_clientWorkedOut(client*workoutx) := FALSE 
-        VAR ww, maximumWorkout IN
+        VAR ww IN
             ww := 0;
-            maximumWorkout := SZE_WORKOUT-1;
-            WHILE ww <= maximumWorkout DO
+            WHILE ww <= r_maximumWorkout DO
                 r_clientWorkedOut(client, ww) := FALSE;
                 ww := ww + 1
             INVARIANT
                 r_clientWorkedOut : CLIENT * WORKOUT --> BOOL
-                & ww : 0..SZE_WORKOUT
+                & ww : 0..(r_maximumWorkout+1)
                 & !workoutx. (workoutx : 0..(ww-1) 
-                    //                        & (client |-> workoutx : dom(r_clientWorkedOut)) 
                     => r_clientWorkedOut(client, workoutx) = FALSE)
             VARIANT
                 SZE_WORKOUT - ww +2
             END
-        END
+        END;
+        r_clients(client) := TRUE;
+        r_clientHasSolicitation(client) := TRUE;
+        r_isClientNew(client) := TRUE
         
     END;
     
@@ -180,30 +179,45 @@ OPERATIONS
     
     //        addWorkout(workout, category, exercisesInWorkout) = skip;
     
-    // Acontece aqui o mesmo que com o removeClient. A remocao eh simples, a adicao complexa.
+    // PROVAS OK (acho)
     removeWorkout(workout) = 
     BEGIN
         r_workouts(workout) := FALSE
     END;
     
-    // VERIFICAR questao de inicializacao
-    // TODO: r_workoutHasExercise
-    // TODO: r_exerciseHasCategory
+    // PROVAS OK (acho)
     addExercise(exercise, category) = 
     BEGIN
         r_exercises(exercise) := TRUE;
-        r_exerciseHasCategory(exercise) := category
+        r_exerciseHasCategory(exercise) := category;
+        
+        // !workoutx r_workoutHasExercise(workoutx,exercise) = FALSE
+        VAR ww IN
+            ww := 0;
+            WHILE ww <= r_maximumWorkout DO
+                r_workoutHasExercise(ww, exercise) := FALSE;
+                ww := ww + 1
+            INVARIANT
+                ww : 0..(r_maximumWorkout +1)
+                & r_workoutHasExercise : WORKOUT * EXERCISE --> BOOL
+                & !workoutx. (workoutx : 0..(ww-1) 
+                    => r_workoutHasExercise(workoutx, exercise) = FALSE)
+            VARIANT
+                SZE_WORKOUT - ww +2
+            END
+        END
     END;
     
-    // Provas ok (eu acho)
+    // PROVAS OK (acho)
     removeExercise(exercise) = 
     BEGIN
         r_exercises(exercise) := FALSE
     END;
     
+    // PROVAS OK (acho)
     askForWorkout(client) = 
     BEGIN
-        r_clientHasSolicitation(client) := YES
+        r_clientHasSolicitation(client) := TRUE
     END;
     
     //        workoutLog <-- getWorkoutLog(client) = skip;
