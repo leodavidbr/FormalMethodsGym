@@ -58,12 +58,12 @@ INVARIANT
     &
     r_isClientNew : CLIENT --> BOOL
     & !cl. ((cl : CLIENT & cl : clients) 
-        => (r_workoutHasCategory(cl) = workoutHasCategory(cl)))
+        => (r_isClientNew(cl) = isClientNew(cl)))
     
     & 
     r_clientHasWorkout : CLIENT * WORKOUT --> BOOL
     & !(cl, wr) .( (cl : CLIENT & wr : WORKOUT & cl : clients & wr : workouts) 
-        => clientHasWorkout = dom(r_clientHasWorkout |> {TRUE}) )
+        => (wr : clientHasWorkout[{cl}] <=> (r_clientHasWorkout(cl,wr) = TRUE)) )
     
     & 
     r_clientWorkedOut : CLIENT * WORKOUT --> BOOL 
@@ -226,3 +226,16 @@ OPERATIONS
     
     defineClientWorkouts(client, workoutPush, workoutPull, workoutLeg) = skip
 END
+
+
+// add client ok
+// remove client ok
+// remove workout ok
+// add exercise ok
+// remove exercise ok
+// askForWorkout ok
+
+// TODO: add workout
+// TODO: getWorkoutLog
+// TODO: getClientsWithWorkoutSolicitations
+// TODO: defineClientWorkouts
