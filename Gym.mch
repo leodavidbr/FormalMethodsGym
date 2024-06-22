@@ -17,7 +17,6 @@ CONSTANTS
     maxWorkoutsInHistory,
     exactNumClientWorkouts,
     PUSH, PULL, LEGS,
-    YES, NO,
     
     NULL,
     ANYEXERCISE,
@@ -38,17 +37,15 @@ PROPERTIES
     & WORKOUT <: NAT
     & EXERCISE <: NAT
     & CATEGORY <: 0..2
-    & SOLICITATION <: NAT
+    & SOLICITATION = BOOL
     
     
     & PUSH = 0 & PULL = 1 & LEGS = 2
-    & NO = 0 & YES = 1
-   
+    
     & CLIENT = 0..5
     & WORKOUT = 0..5
     & CATEGORY = {PUSH, PULL, LEGS}
-    & SOLICITATION = {YES, NO}
-
+    
     & NULL = 0
     & NULL : CLIENT & NULL : WORKOUT & NULL : EXERCISE
     & ANYEXERCISE : EXERCISE
@@ -108,10 +105,10 @@ INVARIANT
 //    & !clientx . (clientx : CLIENT & clientx : clients & clientHasSolicitation(clientx) = YES => card(clientHasWorkout[{clientx}]) = exactNumClientWorkouts or card(clientHasWorkout[{clientx}]) = 0)
     
     // todo cliente nao novo tem exatamente exactNumClientWorkouts workouts
-    & !clientx . (clientx : CLIENT & clientx : clients & isClientNew[{clientx}] = {NO} => card(clientHasWorkout[{clientx}]) = exactNumClientWorkouts)
+    & !clientx . (clientx : CLIENT & clientx : clients & isClientNew[{clientx}] = {FALSE} => card(clientHasWorkout[{clientx}]) = exactNumClientWorkouts)
     
     // todo cliente novo tem 0 workouts
-    & !clientx . (clientx : CLIENT & clientx : clients & isClientNew(clientx) = YES => card(clientHasWorkout[{clientx}]) = 0)
+    & !clientx . (clientx : CLIENT & clientx : clients & isClientNew(clientx) = TRUE => card(clientHasWorkout[{clientx}]) = 0)
     
     // todo cliente que tem treino (sempre exatamente 3) tem um exercício de cada categoria
     & !clientx . (clientx : CLIENT & clientx : clients & card(clientHasWorkout[{clientx}]) = 3 =>  workoutHasCategory[ clientHasWorkout[{clientx}]] = CATEGORY )
@@ -139,8 +136,8 @@ OPERATIONS
             & card(clients) < maxClients
         THEN clients, clientHasSolicitation, isClientNew := 
             clients \/ {client},
-            clientHasSolicitation <+ {client |-> YES},
-            isClientNew \/ {client |-> YES}
+            clientHasSolicitation <+ {client |-> TRUE},
+            isClientNew \/ {client |-> TRUE}
             
         END;
         
@@ -219,6 +216,13 @@ OPERATIONS
             || exerciseHasCategory := {exercise} <<| exerciseHasCategory
         END;
         
+                
+        askForWorkout(client) = 
+        PRE client : CLIENT & client : clients
+            & client /= NULL
+        THEN clientHasSolicitation(client) := TRUE
+        END;
+        
         workoutLog <-- getWorkoutLog(client) =
         PRE 
              client : CLIENT
@@ -247,29 +251,22 @@ OPERATIONS
             END
         END;
         
-        
-        askForWorkout(client) = 
-        PRE client : CLIENT & client : clients
-            & client /= NULL
-        THEN clientHasSolicitation(client) := YES
-        END;
-        
 
         clientsWithSolicitation <-- getClientsWithWorkoutSolicitations = 
         PRE { cc | cc : CLIENT &
              cc : dom(clientHasSolicitation) &
-             clientHasSolicitation(cc) = YES } : FIN({ cc | cc : CLIENT &
-             cc : dom(clientHasSolicitation) & clientHasSolicitation(cc) = YES })
+             clientHasSolicitation(cc) = TRUE } : FIN({ cc | cc : CLIENT &
+             cc : dom(clientHasSolicitation) & clientHasSolicitation(cc) = TRUE })
 
         THEN 
-            IF (clientHasSolicitation~[{YES}] /= {})
+            IF (clientHasSolicitation~[{TRUE}] /= {})
             THEN
                 ANY clientsW 
                   WHERE clientsW : 0..maxClients --> CLIENT
-                       & ran(clientsW |>> {NULL}) = clientHasSolicitation~[{YES}] 
+                       & ran(clientsW |>> {NULL}) = clientHasSolicitation~[{TRUE}] 
                             & clientsW |>> {NULL} : FIN(clientsW |>> {NULL})
-                            & clientHasSolicitation~[{YES}] : FIN(clientHasSolicitation~[{YES}])
-                            & card(clientsW |>> {NULL}) = card(clientHasSolicitation~[{YES}])
+                            & clientHasSolicitation~[{TRUE}] : FIN(clientHasSolicitation~[{TRUE}])
+                            & card(clientsW |>> {NULL}) = card(clientHasSolicitation~[{TRUE}])
                             & ( 
                                 // Redundante, pois o array nunca será vazio nem 100% cheio (considerando so os nao NULL). Mas como nao estamos realizando provas, isso garante que max e min nao serao chamados para conjuntos vazios (para o Atelier parar de reclamar).
                                 (dom(clientsW |> {NULL}) ={} or dom(clientsW |>> {NULL}) = {})
@@ -288,7 +285,7 @@ OPERATIONS
         // TODO: Seria bom tirar a parte de maxWorkoutsInHistory da precondição e colocar como if no THEN
         defineClientWorkouts(client, workoutPush, workoutPull, workoutLeg) =
         PRE client : CLIENT & client : clients 
-            & clientHasSolicitation(client) = YES
+            & clientHasSolicitation(client) = TRUE
             & workoutPush : WORKOUT & workoutPull : WORKOUT & workoutLeg : WORKOUT
             & workoutPush /= NULL & workoutPull /= NULL & workoutLeg /= NULL
             & workoutPush : workouts & workoutHasCategory[{workoutPush}] = {PUSH}
@@ -301,8 +298,8 @@ OPERATIONS
         THEN  clientHasWorkout, clientWorkedOut, clientHasSolicitation, isClientNew := 
 clientHasWorkout <+ ({client} * {workoutPush, workoutPull, workoutLeg}), 
 clientWorkedOut \/ ({client} * clientHasWorkout[{client}]),
-clientHasSolicitation <+ {client |-> NO},
-isClientNew <+ {client |-> NO}
+clientHasSolicitation <+ {client |-> FALSE},
+isClientNew <+ {client |-> FALSE}
         END
         
 END

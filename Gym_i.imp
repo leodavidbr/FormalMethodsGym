@@ -8,12 +8,14 @@ CONCRETE_VARIABLES
      ,r_exercises
     
     , r_clientHasWorkout
-//    ,r_clientWorkedOut
-//    ,r_workoutHasExercise
+    ,r_clientWorkedOut
+    ,r_workoutHasExercise
     ,r_exerciseHasCategory
     ,r_clientHasSolicitation
     ,r_workoutHasCategory
     ,r_isClientNew
+    
+    , r_szeClient
 
 INVARIANT
     r_clients : CLIENT --> BOOL 
@@ -38,13 +40,25 @@ INVARIANT
         (r_workoutHasCategory(wr) = workoutHasCategory(wr)))
     &
      r_isClientNew : CLIENT --> SOLICITATION
-    & !cl. ((cl : CLIENT & cl : clients) => 
-        (r_workoutHasCategory(cl) = workoutHasCategory(cl)))
+    & !cl. ((cl : CLIENT & cl : clients) 
+        => (r_workoutHasCategory(cl) = workoutHasCategory(cl)))
     
-     & 
+    & 
     r_clientHasWorkout : CLIENT * WORKOUT --> BOOL
-    & clientHasWorkout = dom(r_clientHasWorkout |> {TRUE})
+    & !(cl, wr) .( (cl : CLIENT & wr : WORKOUT & cl : clients & wr : workouts) 
+        => clientHasWorkout = dom(r_clientHasWorkout |> {TRUE}) )
+    
+    & 
+    r_clientWorkedOut : CLIENT * WORKOUT --> BOOL 
+    & !(cl, wr) .( (cl : CLIENT & wr : WORKOUT & cl : clients) 
+    => ( wr : clientWorkedOut[{cl}] <=> (r_clientWorkedOut(cl,wr) = TRUE) ) )
 
+    & 
+    r_workoutHasExercise : WORKOUT * EXERCISE --> BOOL 
+    & !(wr, ex) .( (wr : WORKOUT  & ex : EXERCISE & wr : workouts & ex : exercises) 
+    => ( ex : workoutHasExercise[{wr}] <=> (r_workoutHasExercise(wr, ex) = TRUE) ) )
+
+    & r_szeClient = card(CLIENT)
 
 VALUES
     maxClients = 100;
@@ -64,9 +78,7 @@ VALUES
     PUSH = 0;
     PULL = 1;
     LEGS = 2; 
-    NO = 0; 
-    YES = 1;
-    SOLICITATION = 0..1;
+    SOLICITATION = BOOL;
 
     NULL = 0;
     ANYEXERCISE = 0;
@@ -79,34 +91,68 @@ INITIALISATION
     r_workouts := WORKOUT*{FALSE};
     r_exercises := EXERCISE*{FALSE};
     r_exerciseHasCategory := EXERCISE*{ANYEXERCISE};
-    r_clientHasSolicitation := CLIENT*{NO};
+    r_clientHasSolicitation := CLIENT*{FALSE};
     r_workoutHasCategory := WORKOUT*{ANYWORKOUT};
-    r_isClientNew := CLIENT*{YES};
-    r_clientHasWorkout := (CLIENT*WORKOUT)*{FALSE}
-//    
-//    r_clientWorkedOut := {};
-//    r_workoutHasExercise := {};
+    r_isClientNew := CLIENT*{TRUE};
+    r_clientHasWorkout := (CLIENT*WORKOUT)*{FALSE};
+    r_clientWorkedOut := (CLIENT*WORKOUT)*{FALSE};
+    r_workoutHasExercise := (WORKOUT*EXERCISE)*{FALSE};
     
+    r_szeClient := 6
 
 OPERATIONS
-        // Provas ok (eu acho)
+
+// TODO : para todo r_clientHasWorkout(client*workoutx) := FALSE            
+// TODO : para todo r_clientWorkedOUt(client*workoutx) := FALSE  
         addClient(client) = 
         BEGIN
             r_clients(client) := TRUE;
-            r_clientHasSolicitation(client) := YES;
-            r_isClientNew(client) := YES
+            r_clientHasSolicitation(client) := TRUE;
+            r_isClientNew(client) := TRUE;
+            //!workoutx r_clientHasWorkout(client*workoutx) = FALSE
+            VAR nn IN
+                nn := 0;
+                WHILE nn <= r_szeClient DO
+                    r_clientHasWorkout(client, nn) := FALSE
+                INVARIANT
+                    !workoutx. (workoutx : 0..nn => r_clientHasWorkout(client, workoutx) = FALSE)
+                VARIANT
+                    r_szeClient +2 - nn
+                END
+            END
         END;
-//        clients \/ {client},
-//            clientHasSolicitation <+ {client |-> YES},
-//            isClientNew \/ {client |-> YES}
+//                WHILE nn <=  
+//                    
+//                END
 
-        removeClient(client) = skip;
+////            WHILE i <= n DO
+//      sum := sum + i;
+//      i := i + 1
+//    INVARIANT
+//      sum : INTEGER & i : INTEGER & n : INTEGER & i <= n + 1
+//    VARIANT
+//      n - i + 1
 
+
+        // Como nas invariantes de ligacao somente nos importamos com client que pertenca a clients nos relacionamentos e funcoes (na maquina o dominio/contradominio sao clients, quando o client eh removido de r_clients tudo da certo. Mas em compensacao precisamos inicializar corretamente ao cadastrar um client
+        // Provas ok (eu acho)
+        removeClient(client) = 
+        BEGIN
+            r_clients(client) := FALSE
+        END;
+        
+        
 //        addWorkout(workout, category, exercisesInWorkout) = skip;
 
-        removeWorkout(workout) = skip;
+        // Acontece aqui o mesmo que com o removeClient. A remocao eh simples, a adicao complexa.
+        removeWorkout(workout) = 
+        BEGIN
+          r_workouts(workout) := FALSE
+        END;
 
-        // Provas ok (eu acho)
+        // VERIFICAR questao de inicializacao
+        // TODO: r_workoutHasExercise
+        // TODO: r_exerciseHasCategory
         addExercise(exercise, category) = 
         BEGIN
             r_exercises(exercise) := TRUE;
@@ -119,10 +165,12 @@ OPERATIONS
             r_exercises(exercise) := FALSE
         END;
 
+        askForWorkout(client) = 
+        BEGIN
+            r_clientHasSolicitation(client) := TRUE
+        END;
         
         workoutLog <-- getWorkoutLog(client) = skip;
-        
-        askForWorkout(client) = skip;
 
         clientsWithSolicitation <-- getClientsWithWorkoutSolicitations = skip;
         
