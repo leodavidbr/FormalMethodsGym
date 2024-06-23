@@ -337,8 +337,11 @@ OPERATIONS
         VAR ww IN
             ww := 0;
             WHILE ww <= r_maximumWorkout DO
-                IF ( r_clientHasWorkout(client, ww) = TRUE ) THEN
+                VAR clHasWr IN
+                    clHasWr := r_clientHasWorkout(client, ww);
+                IF (clHasWr = TRUE) THEN
                     r_clientWorkedOut(client, ww) := TRUE
+                END
                 END;
                 ww := ww + 1
             INVARIANT
@@ -355,6 +358,27 @@ OPERATIONS
         r_clientHasWorkout(client, wr1) := TRUE;
         r_clientHasWorkout(client, wr2) := TRUE;
         r_clientHasWorkout(client, wr3) := TRUE
+    END;
+    
+    listClients <-- getClients = 
+    BEGIN
+        // !clientx listClients(clientx) = r_clients(clientx)
+        VAR cc IN
+            cc := 0;
+            WHILE cc <= r_maximumClient DO
+                listClients(cc) := r_clients(cc);
+                cc := cc + 1
+            INVARIANT
+                cc : 0..(r_maximumClient +1)
+                & r_clients : CLIENT --> BOOL
+                & listClients : NAT --> BOOL
+                & dom(listClients |> {TRUE}) <: CLIENT
+                & !clientx. (clientx : 0..(cc-1) 
+                    => listClients(clientx) = r_clients(clientx))
+            VARIANT
+                r_maximumClient - cc +2
+            END
+        END
     END
     
 END

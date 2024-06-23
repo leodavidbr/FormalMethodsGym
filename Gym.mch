@@ -272,8 +272,15 @@ OPERATIONS
         clientWorkedOut \/ ({client} * clientHasWorkout[{client}]),
         clientHasSolicitation <+ {client |-> FALSE},
         isClientNew <+ {client |-> FALSE}
+    END;
+    
+    listClients <-- getClients =
+    ANY list 
+    WHERE list : NAT --> BOOL
+        & dom(list |> {TRUE}) <: CLIENT
+        & dom(list |> {TRUE}) = clients
+    THEN listClients := list
     END
-   
     
 END
 
