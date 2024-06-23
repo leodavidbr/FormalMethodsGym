@@ -218,27 +218,23 @@ OPERATIONS
             END
         END;
         // !exercisex r_workoutHasExercise(workout, exercisex) := exercisesInWorkout(exercisex);
-        VAR ex, maxArrayItem IN
+        VAR ex IN
             ex := 0;
-            maxArrayItem := 14;
-            WHILE ex <= maxArrayItem DO
+            WHILE ex <= r_maximumExercise DO
                 r_workoutHasExercise(workout, ex) := exercisesInWorkout(ex);
                 ex := ex +1
             INVARIANT
-                ex : 0..(maxArrayItem +1)
+                ex : 0..(r_maximumExercise +1)
                 & r_workoutHasExercise : WORKOUT * EXERCISE --> BOOL
-                & exercisesInWorkout : 0..maxArrayItem --> BOOL
+                & exercisesInWorkout : NAT --> BOOL
+                & dom(exercisesInWorkout |> {TRUE}) <: EXERCISE 
                 & !exercisex. (exercisex : 0..(ex-1) 
                     => r_workoutHasExercise(workout, exercisex) = exercisesInWorkout(exercisex))
             VARIANT
-                maxArrayItem - ex + 2
+                r_maximumExercise - ex + 2
             END
         END
     END;
-    //    THEN workouts, workoutHasCategory, workoutHasExercise  :=
-    //        workouts \/ {workout},
-    //        workoutHasCategory \/ {workout |-> categoryWr},
-    //        workoutHasExercise \/ {workout}*dom(exercisesInWorkout |> {TRUE})
     
     // PROVAS OK (acho)
     removeWorkout(workout) = 
@@ -284,30 +280,27 @@ OPERATIONS
     workoutLog <-- getWorkoutLog(client) = 
     BEGIN
         // !workoutx log(workoutx) <=> r_clientWorkedOut(client, workoutx)
-        VAR log, ww IN
+        VAR ww IN
             ww := 0;
-            log := (0..14)*{FALSE}; 
-            
             WHILE ww <= r_maximumWorkout DO
-                log(ww) := r_clientWorkedOut(client, ww);
+                workoutLog(ww) := r_clientWorkedOut(client, ww);
                 ww := ww + 1
             INVARIANT
                 ww : 0..(r_maximumWorkout +1)
                 & r_clientWorkedOut : CLIENT * WORKOUT --> BOOL
-                & log : WORKOUT --> BOOL
-                
+                & workoutLog : NAT --> BOOL
+                & dom(workoutLog |> {TRUE}) <: WORKOUT
                 & !workoutx. (workoutx : 0..(ww-1) 
-                    => log(workoutx) = r_clientWorkedOut(client, workoutx))
+                    => workoutLog(workoutx) = r_clientWorkedOut(client, workoutx))
             VARIANT
-                SZE_WORKOUT - ww +2
-            END;
-            workoutLog := log
+                r_maximumWorkout - ww +2
+            END
         END
     END;
     
     //        clientsWithSolicitation <-- getClientsWithWorkoutSolicitations = skip;
     
-    defineClientWorkouts(client, workoutPush, workoutPull, workoutLeg) = skip
+//    defineClientWorkouts(client, workoutPush, workoutPull, workoutLeg) = skip
     
 END
 // add client ok
@@ -316,9 +309,9 @@ END
 // add exercise ok
 // remove exercise ok
 // askForWorkout ok
-// ?????: getWorkoutLog code generation
+// getWorkoutLog ok
+// add workout ok
 
 
-// TODO: add workout
 // TODO: getClientsWithWorkoutSolicitations
 // TODO: defineClientWorkouts

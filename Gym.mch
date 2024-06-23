@@ -177,7 +177,9 @@ OPERATIONS
         & card(workouts) < maxWorkouts
         
         // ------ typing exercisesInWorkout init ------ 
-        & exercisesInWorkout : 0..14 --> BOOL
+//        & exercisesInWorkout : 0..14 --> BOOL
+        & exercisesInWorkout : NAT --> BOOL
+        & dom(exercisesInWorkout |> {TRUE}) <: EXERCISE
         & dom(exercisesInWorkout |> {TRUE}) <: exercises // todos os exs ja estao cadastrados
         & exercisesInWorkout |> {TRUE} : FIN(exercisesInWorkout |> {TRUE})
         & card(exercisesInWorkout |> {TRUE}) <= maxExercisesInWorkout
@@ -237,37 +239,35 @@ OPERATIONS
         & client : clients
         & client /= NULL
         & clientWorkedOut[{client}] : FIN(clientWorkedOut[{client}])
-//        & workoutLog : WORKOUT --> BOOL
     THEN 
         ANY log 
-//        WHERE log : WORKOUT --> BOOL 
-        WHERE log : 0..14 --> BOOL
+        WHERE log : NAT --> BOOL
+            & dom(log |> {TRUE}) <: WORKOUT
             & dom(log |> {TRUE}) = clientWorkedOut[{client}] 
         THEN workoutLog := log
         END
-        //workoutLog := % workoutLog.(workoutLog : WORKOUT | bool(workoutLog:clientWorkedOut[{client}]))
     END;
     
     // PROVAS OK (Leo)
     // TODO: Seria bom tirar a parte de maxWorkoutsInHistory da precondição e colocar como if no THEN
-    defineClientWorkouts(client, workoutPush, workoutPull, workoutLeg) =
-    PRE client : CLIENT & client : clients & client /= NULL
-        & clientHasSolicitation(client) = TRUE
-        & workoutPush : WORKOUT & workoutPull : WORKOUT & workoutLeg : WORKOUT
-        & workoutPush /= NULL & workoutPull /= NULL & workoutLeg /= NULL
-        & workoutPush : workouts & workoutHasCategory[{workoutPush}] = {PUSH}
-        & workoutPull : workouts & workoutHasCategory[{workoutPull}] = {PULL}
-        & workoutLeg : workouts & workoutHasCategory[{workoutLeg}] = {LEGS}
-        & workoutPush /= workoutPull & workoutPull /= workoutLeg & workoutPush /= workoutLeg  // redundante
-        & clientWorkedOut \/ {client} * clientHasWorkout[{client}] : FIN(clientWorkedOut \/ {client} * clientHasWorkout[{client}])
-        & card(clientWorkedOut \/ {client} * clientHasWorkout[{client}]) < maxWorkoutsInHistory
-        
-    THEN  clientHasWorkout, clientWorkedOut, clientHasSolicitation, isClientNew := 
-        clientHasWorkout <+ ({client} * {workoutPush, workoutPull, workoutLeg}), 
-        clientWorkedOut \/ ({client} * clientHasWorkout[{client}]),
-        clientHasSolicitation <+ {client |-> FALSE},
-        isClientNew <+ {client |-> FALSE}
-    END
+//    defineClientWorkouts(client, workoutPush, workoutPull, workoutLeg) =
+//    PRE client : CLIENT & client : clients & client /= NULL
+//        & clientHasSolicitation(client) = TRUE
+//        & workoutPush : WORKOUT & workoutPull : WORKOUT & workoutLeg : WORKOUT
+//        & workoutPush /= NULL & workoutPull /= NULL & workoutLeg /= NULL
+//        & workoutPush : workouts & workoutHasCategory[{workoutPush}] = {PUSH}
+//        & workoutPull : workouts & workoutHasCategory[{workoutPull}] = {PULL}
+//        & workoutLeg : workouts & workoutHasCategory[{workoutLeg}] = {LEGS}
+//        & workoutPush /= workoutPull & workoutPull /= workoutLeg & workoutPush /= workoutLeg  // redundante
+//        & clientWorkedOut \/ {client} * clientHasWorkout[{client}] : FIN(clientWorkedOut \/ {client} * clientHasWorkout[{client}])
+//        & card(clientWorkedOut \/ {client} * clientHasWorkout[{client}]) < maxWorkoutsInHistory
+//        
+//    THEN  clientHasWorkout, clientWorkedOut, clientHasSolicitation, isClientNew := 
+//        clientHasWorkout <+ ({client} * {workoutPush, workoutPull, workoutLeg}), 
+//        clientWorkedOut \/ ({client} * clientHasWorkout[{client}]),
+//        clientHasSolicitation <+ {client |-> FALSE},
+//        isClientNew <+ {client |-> FALSE}
+//    END
     
 END
 
