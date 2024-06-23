@@ -87,7 +87,6 @@ VARIABLES
     isClientNew
     
 INVARIANT
-    
     clients <: CLIENT 
     & workouts <: WORKOUT
     & exercises <: EXERCISE
@@ -242,6 +241,7 @@ OPERATIONS
         & client : clients
         & client /= NULL
         & clientWorkedOut[{client}] : FIN(clientWorkedOut[{client}])
+        & workoutLog : WORKOUT --> BOOL
     THEN 
         ANY log 
                 WHERE log : WORKOUT --> BOOL 

@@ -62,20 +62,41 @@ INVARIANT
     
     & 
     r_clientHasWorkout : CLIENT * WORKOUT --> BOOL
-    & !(cl, wr) .( (cl : CLIENT & wr : WORKOUT & cl : clients & wr : workouts) 
-        => (wr : clientHasWorkout[{cl}] <=> (r_clientHasWorkout(cl,wr) = TRUE)) )
+    & !(cl) .( (cl : CLIENT & cl : clients) 
+        => (clientHasWorkout[{cl}] =
+            UNION(wr).(wr : WORKOUT & wr : workouts & r_clientHasWorkout(cl,wr) = TRUE | {wr}) ) )
+    
+    //    & 
+    //    r_clientHasWorkout : CLIENT * WORKOUT --> BOOL
+    //    & !(cl, wr) .( (cl : CLIENT & wr : WORKOUT & cl : clients & wr : workouts) 
+    //        => (wr : clientHasWorkout[{cl}] <=> (r_clientHasWorkout(cl,wr) = TRUE)) )
     
     & 
     r_clientWorkedOut : CLIENT * WORKOUT --> BOOL 
-    & !(cl, wr) .( (cl : CLIENT & wr : WORKOUT & cl : clients) 
-        => ( wr : clientWorkedOut[{cl}] <=> (r_clientWorkedOut(cl,wr) = TRUE) ) )
+    & !(cl) .( (cl : CLIENT & cl : clients) 
+        => (clientWorkedOut[{cl}] =
+            UNION(wr).(wr : WORKOUT & r_clientWorkedOut(cl,wr) = TRUE | {wr}) ) )
     
     & 
     r_workoutHasExercise : WORKOUT * EXERCISE --> BOOL 
-    & !(wr, ex) .( (wr : WORKOUT  & ex : EXERCISE & wr : workouts & ex : exercises) 
-        => ( ex : workoutHasExercise[{wr}] <=> (r_workoutHasExercise(wr, ex) = TRUE) ) )
+    & !(wr) .( (wr : WORKOUT & wr : workouts) 
+        => ( workoutHasExercise[{wr}] =
+            UNION(ex).(ex : EXERCISE & ex : exercises & r_workoutHasExercise(wr, ex) = TRUE | {ex}) ) )
     
-    
+    // Outras formas de ligar as relacoes que pensei:
+    // Forma 01
+    //    r_clientWorkedOut : CLIENT * WORKOUT --> BOOL 
+    //    & !(cl, wr) .( (cl : CLIENT & wr : WORKOUT & cl : clients) 
+    //        => ( wr : clientWorkedOut[{cl}] <=> (r_clientWorkedOut(cl,wr) = TRUE) ) )
+    //
+    // Forma 02
+    //    r_clientWorkedOut : CLIENT * WORKOUT --> BOOL 
+    //    & !(cl) .( (cl : CLIENT & cl : clients) 
+    //        => (clientWorkedOut[{cl}] = (ran(dom(r_clientWorkedOut |> {TRUE})) ) ) ) 
+    //
+    // Forma 03
+    //    r_clientWorkedOut : CLIENT * WORKOUT --> BOOL 
+    //       & clientWorkedOut = dom( (UNION(cl, wr).(cl : CLIENT & cl : clients & wr : WORKOUT | {cl |-> wr} )) <| (r_clientWorkedOut |> {TRUE}))
     
 VALUES
     maxClients = 100;
@@ -222,6 +243,7 @@ OPERATIONS
     
     workoutLog <-- getWorkoutLog(client) = 
     BEGIN
+        ASSERT workoutLog : WORKOUT --> BOOL THEN
         // !workoutx log(workoutx) <=> r_clientWorkedOut(client, workoutx)
         VAR log, ww IN
             ww := 0;
@@ -234,27 +256,28 @@ OPERATIONS
                 ww : 0..(r_maximumWorkout +1)
                 & r_clientWorkedOut : CLIENT * WORKOUT --> BOOL
                 & log : WORKOUT --> BOOL
-                & dom(log |> {TRUE}) = (UNION(xx).( (xx : 0..(ww-1) & r_clientWorkedOut(client, xx) = TRUE ) | {xx} ))
-//                & !workoutx. (workoutx : 0..(ww-1) 
-//                    => log(workoutx) = r_clientWorkedOut(client, workoutx))
+                
+                & !workoutx. (workoutx : 0..(ww-1) 
+                    => log(workoutx) = r_clientWorkedOut(client, workoutx))
             VARIANT
                 SZE_WORKOUT - ww +2
             END;
             workoutLog := log
         END
+        END
     END;
-//    PRE 
-//         client : CLIENT
-//        & client : clients
-//        & client /= NULL
-//        & clientWorkedOut[{client}] : FIN(clientWorkedOut[{client}])
-//    THEN 
-//        ANY log 
-//                WHERE log : WORKOUT --> BOOL 
-//                    & dom(log |> {TRUE}) = clientWorkedOut[{client}] 
-//                THEN workoutLog := log
-//        END
-//    END;
+    //    PRE 
+    //         client : CLIENT
+    //        & client : clients
+    //        & client /= NULL
+    //        & clientWorkedOut[{client}] : FIN(clientWorkedOut[{client}])
+    //    THEN 
+    //        ANY log 
+    //                WHERE log : WORKOUT --> BOOL 
+    //                    & dom(log |> {TRUE}) = clientWorkedOut[{client}] 
+    //                THEN workoutLog := log
+    //        END
+    //    END;
     
     //        clientsWithSolicitation <-- getClientsWithWorkoutSolicitations = skip;
     
