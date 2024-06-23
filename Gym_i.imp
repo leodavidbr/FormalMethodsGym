@@ -298,7 +298,7 @@ OPERATIONS
         END
     END;
     
-    //        clientsWithSolicitation <-- getClientsWithWorkoutSolicitations = skip;
+            clientsWithSolicitation <-- getClientsWithWorkoutSolicitation = skip
     
 //    defineClientWorkouts(client, workoutPush, workoutPull, workoutLeg) = skip
     
