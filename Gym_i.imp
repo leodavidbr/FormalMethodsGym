@@ -91,10 +91,10 @@ INVARIANT
             UNION(ex).(ex : EXERCISE & ex : exercises & r_workoutHasExercise(wr, ex) = TRUE | {ex}) ) )
     
     // Outras formas de ligar as relacoes que pensei:
-//     Forma 01
-//        r_clientWorkedOut : CLIENT * WORKOUT --> BOOL 
-//        & !(cl, wr) .( (cl : CLIENT & wr : WORKOUT & cl : clients) 
-//            => ( wr : clientWorkedOut[{cl}] <=> (r_clientWorkedOut(cl,wr) = TRUE) ) )
+    //     Forma 01
+    //        r_clientWorkedOut : CLIENT * WORKOUT --> BOOL 
+    //        & !(cl, wr) .( (cl : CLIENT & wr : WORKOUT & cl : clients) 
+    //            => ( wr : clientWorkedOut[{cl}] <=> (r_clientWorkedOut(cl,wr) = TRUE) ) )
     //
     // Forma 02
     //    r_clientWorkedOut : CLIENT * WORKOUT --> BOOL 
@@ -111,7 +111,7 @@ VALUES
     maxExercises = 15;
     
     maxExercisesInWorkout = 7;
-//    maxWorkoutsInHistory = 40;
+    //    maxWorkoutsInHistory = 40;
     exactNumClientWorkouts = 3;
     
     SZE_CLIENT = 15;
@@ -306,28 +306,56 @@ OPERATIONS
         END
     END;
     
-            clientsWithSolicitation <-- getClientsWithWorkoutSolicitation = 
-        BEGIN
-                // !clientx clientsWithSolicitation(clientx) = r_clientHasSolicitation(clientx)
-                VAR ww IN
-                    ww := 0;
-                    WHILE ww <= r_maximumClient DO
-                        clientsWithSolicitation(ww) := r_clientHasSolicitation(ww);
-                        ww := ww + 1
-                    INVARIANT
-                        ww : 0..(r_maximumClient +1)
-                        & r_clientHasSolicitation : CLIENT --> BOOL
-                        & clientsWithSolicitation : NAT --> BOOL
-                        & dom(clientsWithSolicitation |> {TRUE}) <: CLIENT
-                        & !clientx. (clientx : 0..(ww-1) 
-                            => clientsWithSolicitation(clientx) = r_clientHasSolicitation(clientx))
-                    VARIANT
-                        r_maximumClient - ww +2
-                    END
-                END
-            END;
+    clientsWithSolicitation <-- getClientsWithWorkoutSolicitation = 
+    BEGIN
+        // !clientx clientsWithSolicitation(clientx) = r_clientHasSolicitation(clientx)
+        VAR ww IN
+            ww := 0;
+            WHILE ww <= r_maximumClient DO
+                clientsWithSolicitation(ww) := r_clientHasSolicitation(ww);
+                ww := ww + 1
+            INVARIANT
+                ww : 0..(r_maximumClient +1)
+                & r_clientHasSolicitation : CLIENT --> BOOL
+                & clientsWithSolicitation : NAT --> BOOL
+                & dom(clientsWithSolicitation |> {TRUE}) <: CLIENT
+                & !clientx. (clientx : 0..(ww-1) 
+                    => clientsWithSolicitation(clientx) = r_clientHasSolicitation(clientx))
+            VARIANT
+                r_maximumClient - ww +2
+            END
+        END
+    END;
     
-    defineClientWorkouts(client, wr1, wr2, wr3) = skip
+    // TODO: clientWorkedOut
+    defineClientWorkouts(client, wr1, wr2, wr3) = 
+    BEGIN
+        r_clientHasSolicitation(client) := FALSE;
+        r_isClientNew(client) := FALSE;
+        
+        // !workoutx IF r_clientHasWorkout(client,workoutx) THEN r_clientWorkedOut(client, workoutx)
+        VAR ww IN
+            ww := 0;
+            WHILE ww <= r_maximumWorkout DO
+                IF ( r_clientHasWorkout(client, ww) = TRUE ) THEN
+                    r_clientWorkedOut(client, ww) := TRUE
+                END;
+                ww := ww + 1
+            INVARIANT
+                ww : NAT
+                & ww : 0..(r_maximumWorkout +1)
+                & r_clientWorkedOut : CLIENT * WORKOUT --> BOOL
+                & r_clientHasWorkout : CLIENT * WORKOUT --> BOOL
+                & !workoutx. (workoutx : 0..(ww-1) 
+                    => (r_clientHasWorkout(client,workoutx) = TRUE => r_clientWorkedOut(client, workoutx) = TRUE) )
+            VARIANT
+                r_maximumWorkout - ww +2
+            END
+        END;
+        r_clientHasWorkout(client, wr1) := TRUE;
+        r_clientHasWorkout(client, wr2) := TRUE;
+        r_clientHasWorkout(client, wr3) := TRUE
+    END
     
 END
 // add client ok
@@ -339,5 +367,4 @@ END
 // getWorkoutLog ok
 // add workout ok
 // getClientsWithWorkoutSolicitations ok
-
-// TODO: defineClientWorkouts
+// defineClientWorkouts ok
