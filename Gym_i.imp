@@ -243,7 +243,6 @@ OPERATIONS
     
     workoutLog <-- getWorkoutLog(client) = 
     BEGIN
-        ASSERT workoutLog : WORKOUT --> BOOL THEN
         // !workoutx log(workoutx) <=> r_clientWorkedOut(client, workoutx)
         VAR log, ww IN
             ww := 0;
@@ -264,7 +263,6 @@ OPERATIONS
             END;
             workoutLog := log
         END
-        END
     END;
     //    PRE 
     //         client : CLIENT
@@ -280,11 +278,10 @@ OPERATIONS
     //    END;
     
     //        clientsWithSolicitation <-- getClientsWithWorkoutSolicitations = skip;
-    
+   
     defineClientWorkouts(client, workoutPush, workoutPull, workoutLeg) = skip
+
 END
-
-
 // add client ok
 // remove client ok
 // remove workout ok

@@ -248,6 +248,7 @@ OPERATIONS
                     & dom(log |> {TRUE}) = clientWorkedOut[{client}] 
                 THEN workoutLog := log
         END
+//workoutLog := % workoutLog.(workoutLog : WORKOUT | bool(workoutLog:clientWorkedOut[{client}]))
     END;
     
     // PROVAS OK (Leo)
