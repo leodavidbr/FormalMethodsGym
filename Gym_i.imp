@@ -111,7 +111,7 @@ VALUES
     maxExercises = 15;
     
     maxExercisesInWorkout = 7;
-    maxWorkoutsInHistory = 40;
+//    maxWorkoutsInHistory = 40;
     exactNumClientWorkouts = 3;
     
     SZE_CLIENT = 15;
@@ -293,7 +293,8 @@ OPERATIONS
                 workoutLog(ww) := r_clientWorkedOut(client, ww);
                 ww := ww + 1
             INVARIANT
-                ww : 0..(r_maximumWorkout +1)
+                ww : NAT
+                & ww : 0..(r_maximumWorkout +1)
                 & r_clientWorkedOut : CLIENT * WORKOUT --> BOOL
                 & workoutLog : NAT --> BOOL
                 & dom(workoutLog |> {TRUE}) <: WORKOUT
@@ -324,9 +325,9 @@ OPERATIONS
                         r_maximumClient - ww +2
                     END
                 END
-            END
+            END;
     
-//    defineClientWorkouts(client, workoutPush, workoutPull, workoutLeg) = skip
+    defineClientWorkouts(client, workoutPush, workoutPull, workoutLeg) = skip
     
 END
 // add client ok
@@ -337,7 +338,6 @@ END
 // askForWorkout ok
 // getWorkoutLog ok
 // add workout ok
+// getClientsWithWorkoutSolicitations ok
 
-
-// TODO: getClientsWithWorkoutSolicitations
 // TODO: defineClientWorkouts
