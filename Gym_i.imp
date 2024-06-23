@@ -305,7 +305,26 @@ OPERATIONS
         END
     END;
     
-            clientsWithSolicitation <-- getClientsWithWorkoutSolicitation = skip
+            clientsWithSolicitation <-- getClientsWithWorkoutSolicitation = 
+        BEGIN
+                // !clientx clientsWithSolicitation(clientx) = r_clientHasSolicitation(clientx)
+                VAR ww IN
+                    ww := 0;
+                    WHILE ww <= r_maximumClient DO
+                        clientsWithSolicitation(ww) := r_clientHasSolicitation(ww);
+                        ww := ww + 1
+                    INVARIANT
+                        ww : 0..(r_maximumClient +1)
+                        & r_clientHasSolicitation : CLIENT --> BOOL
+                        & clientsWithSolicitation : NAT --> BOOL
+                        & dom(clientsWithSolicitation |> {TRUE}) <: CLIENT
+                        & !clientx. (clientx : 0..(ww-1) 
+                            => clientsWithSolicitation(clientx) = r_clientHasSolicitation(clientx))
+                    VARIANT
+                        r_maximumClient - ww +2
+                    END
+                END
+            END
     
 //    defineClientWorkouts(client, workoutPush, workoutPull, workoutLeg) = skip
     
