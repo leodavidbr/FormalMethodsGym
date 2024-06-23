@@ -210,18 +210,18 @@ OPERATIONS
         r_workouts(workout) := TRUE;
         r_workoutHasCategory(workout) := categoryWr;
         // !clientx r_clientHasWorkout(clientx*workout) = FALSE
-        VAR cc IN
-            cc := 0;
-            WHILE cc <= r_maximumClient DO
-                r_clientHasWorkout(cc, workout) := FALSE;
-                cc := cc + 1
+        VAR ww IN
+            ww := 0;
+            WHILE ww <= r_maximumClient DO
+                r_clientHasWorkout(ww, workout) := FALSE;
+                ww := ww + 1
             INVARIANT
-                cc : 0..(r_maximumClient +1)
+                ww : 0..(r_maximumClient +1)
                 & r_clientHasWorkout : CLIENT * WORKOUT --> BOOL
-                & !clientx. (clientx : 0..(cc-1) 
+                & !clientx. (clientx : 0..(ww-1) 
                     => r_clientHasWorkout(clientx, workout) = FALSE)
             VARIANT
-                SZE_WORKOUT - cc +2
+                SZE_WORKOUT - ww +2
             END
         END;
         // !exercisex r_workoutHasExercise(workout, exercisex) := exercisesInWorkout(exercisex);
@@ -309,20 +309,20 @@ OPERATIONS
     clientsWithSolicitation <-- getClientsWithWorkoutSolicitation = 
     BEGIN
         // !clientx clientsWithSolicitation(clientx) = r_clientHasSolicitation(clientx)
-        VAR ww IN
-            ww := 0;
-            WHILE ww <= r_maximumClient DO
-                clientsWithSolicitation(ww) := r_clientHasSolicitation(ww);
-                ww := ww + 1
+        VAR cc IN
+            cc := 0;
+            WHILE cc <= r_maximumClient DO
+                clientsWithSolicitation(cc) := r_clientHasSolicitation(cc);
+                cc := cc + 1
             INVARIANT
-                ww : 0..(r_maximumClient +1)
+                cc : 0..(r_maximumClient +1)
                 & r_clientHasSolicitation : CLIENT --> BOOL
                 & clientsWithSolicitation : NAT --> BOOL
                 & dom(clientsWithSolicitation |> {TRUE}) <: CLIENT
-                & !clientx. (clientx : 0..(ww-1) 
+                & !clientx. (clientx : 0..(cc-1) 
                     => clientsWithSolicitation(clientx) = r_clientHasSolicitation(clientx))
             VARIANT
-                r_maximumClient - ww +2
+                r_maximumClient - cc +2
             END
         END
     END;
@@ -384,20 +384,20 @@ OPERATIONS
     listExercises <-- getExercises = 
     BEGIN
         // !exercisex listExercises(exercisex) = r_exercises(exercisex)
-        VAR cc IN
-            cc := 0;
-            WHILE cc <= r_maximumExercise DO
-                listExercises(cc) := r_exercises(cc);
-                cc := cc + 1
+        VAR ex IN
+            ex := 0;
+            WHILE ex <= r_maximumExercise DO
+                listExercises(ex) := r_exercises(ex);
+                ex := ex + 1
             INVARIANT
-                cc : 0..(r_maximumExercise +1)
-                & r_exercises : CLIENT --> BOOL
+                ex : 0..(r_maximumExercise +1)
+                & r_exercises : EXERCISE --> BOOL
                 & listExercises : NAT --> BOOL
-                & dom(listExercises |> {TRUE}) <: CLIENT
-                & !exercisex. (exercisex : 0..(cc-1) 
+                & dom(listExercises |> {TRUE}) <: EXERCISE
+                & !exercisex. (exercisex : 0..(ex-1) 
                     => listExercises(exercisex) = r_exercises(exercisex))
             VARIANT
-                r_maximumExercise - cc +2
+                r_maximumExercise - ex +2
             END
         END
     END;
@@ -405,20 +405,41 @@ OPERATIONS
     listWorkouts <-- getWorkouts = 
     BEGIN
         // !workoutx listWorkouts(workoutx) = r_workouts(workoutx)
-        VAR cc IN
-            cc := 0;
-            WHILE cc <= r_maximumWorkout DO
-                listWorkouts(cc) := r_workouts(cc);
-                cc := cc + 1
+        VAR ww IN
+            ww := 0;
+            WHILE ww <= r_maximumWorkout DO
+                listWorkouts(ww) := r_workouts(ww);
+                ww := ww + 1
             INVARIANT
-                cc : 0..(r_maximumWorkout +1)
-                & r_workouts : CLIENT --> BOOL
+                ww : 0..(r_maximumWorkout +1)
+                & r_workouts : WORKOUT --> BOOL
                 & listWorkouts : NAT --> BOOL
-                & dom(listWorkouts |> {TRUE}) <: CLIENT
-                & !workoutx. (workoutx : 0..(cc-1) 
+                & dom(listWorkouts |> {TRUE}) <: WORKOUT
+                & !workoutx. (workoutx : 0..(ww-1) 
                     => listWorkouts(workoutx) = r_workouts(workoutx))
             VARIANT
-                r_maximumWorkout - cc +2
+                r_maximumWorkout - ww +2
+            END
+        END
+    END;
+    
+    listWorkouts <-- getCurrentWorkoutsClient(client) = 
+    BEGIN
+        // !workoutx listWorkouts(workoutx) = r_workouts(workoutx)
+        VAR ww IN
+            ww := 0;
+            WHILE ww <= r_maximumWorkout DO
+                listWorkouts(ww) := r_clientHasWorkout(client, ww);
+                ww := ww + 1
+            INVARIANT
+                ww : 0..(r_maximumWorkout +1)
+                & r_clientHasWorkout : CLIENT * WORKOUT --> BOOL
+                & listWorkouts : NAT --> BOOL
+                & dom(listWorkouts |> {TRUE}) <: WORKOUT
+                & !workoutx. (workoutx : 0..(ww-1) 
+                    => listWorkouts(workoutx) = r_clientHasWorkout(client, workoutx))
+            VARIANT
+                r_maximumWorkout - ww +2
             END
         END
     END
@@ -434,3 +455,4 @@ END
 // add workout ok
 // getClientsWithWorkoutSolicitations ok
 // defineClientWorkouts ok
+//

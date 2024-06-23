@@ -296,6 +296,19 @@ OPERATIONS
         & dom(list |> {TRUE}) <: WORKOUT
         & dom(list |> {TRUE}) = workouts
     THEN listWorkouts := list
+    END;
+    
+    listWorkouts <-- getCurrentWorkoutsClient(client) =
+    PRE
+        client : CLIENT & client : clients
+    THEN
+        ANY list 
+        WHERE list : NAT --> BOOL
+            & dom(list |> {TRUE}) <: WORKOUT
+            & dom(list |> {TRUE}) = workouts
+        THEN listWorkouts := list
+        END
+        
     END
     
 END
