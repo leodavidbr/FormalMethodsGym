@@ -197,7 +197,7 @@ OPERATIONS
         
     END;
     
-    // Como nas invariantes de ligacao somente nos importamos com client que pertenca a clients nos relacionamentos e funcoes (na maquina o dominio/contradominio sao clients, quando o client eh removido de r_clients tudo da certo. Mas em compensacao precisamos inicializar corretamente ao cadastrar um client
+    // Como nas invariantes de ligacao somente nos importamos com client que pertenca a clients nos relacionamentos e funcoes (que na maquina o dominio/contradominio sao clients), quando o client eh removido de r_clients tudo da certo. Mas em compensacao precisamos inicializar corretamente ao cadastrar um client
     // Provas ok (eu acho)
     removeClient(client) = 
     BEGIN
