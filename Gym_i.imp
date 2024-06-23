@@ -99,17 +99,17 @@ INVARIANT
     //       & clientWorkedOut = dom( (UNION(cl, wr).(cl : CLIENT & cl : clients & wr : WORKOUT | {cl |-> wr} )) <| (r_clientWorkedOut |> {TRUE}))
     
 VALUES
-    maxClients = 100;
+    maxClients = 15;
     maxWorkouts = 15;
-    maxExercises = 30;
+    maxExercises = 15;
     
     maxExercisesInWorkout = 7;
     maxWorkoutsInHistory = 40;
     exactNumClientWorkouts = 3;
     
-    SZE_CLIENT = 5;
-    SZE_WORKOUT = 5;
-    SZE_EXERCISE = 5;
+    SZE_CLIENT = 15;
+    SZE_WORKOUT = 15;
+    SZE_EXERCISE = 15;
     SZE_CATEGORY = 3;
     
     r_maximumClient = SZE_CLIENT - 1;
@@ -197,8 +197,48 @@ OPERATIONS
         r_clients(client) := FALSE
     END;
     
-    
-    //        addWorkout(workout, category, exercisesInWorkout) = skip;
+    // TODO: r_workoutHasExercise
+    addWorkout(workout, categoryWr, exercisesInWorkout) = 
+    BEGIN
+        r_workouts(workout) := TRUE;
+        r_workoutHasCategory(workout) := categoryWr;
+        // !clientx r_clientHasWorkout(clientx*workout) = FALSE
+        VAR cc IN
+            cc := 0;
+            WHILE cc <= r_maximumClient DO
+                r_clientHasWorkout(cc, workout) := FALSE;
+                cc := cc + 1
+            INVARIANT
+                cc : 0..(r_maximumClient +1)
+                & r_clientHasWorkout : CLIENT * WORKOUT --> BOOL
+                & !clientx. (clientx : 0..(cc-1) 
+                    => r_clientHasWorkout(clientx, workout) = FALSE)
+            VARIANT
+                SZE_WORKOUT - cc +2
+            END
+        END;
+        // !exercisex r_workoutHasExercise(workout, exercisex) := exercisesInWorkout(exercisex);
+        VAR ex, maxArrayItem IN
+            ex := 0;
+            maxArrayItem := 14;
+            WHILE ex <= maxArrayItem DO
+                r_workoutHasExercise(workout, ex) := exercisesInWorkout(ex);
+                ex := ex +1
+            INVARIANT
+                ex : 0..(maxArrayItem +1)
+                & r_workoutHasExercise : WORKOUT * EXERCISE --> BOOL
+                & exercisesInWorkout : 0..maxArrayItem --> BOOL
+                & !exercisex. (exercisex : 0..(ex-1) 
+                    => r_workoutHasExercise(workout, exercisex) = exercisesInWorkout(exercisex))
+            VARIANT
+                maxArrayItem - ex + 2
+            END
+        END
+    END;
+    //    THEN workouts, workoutHasCategory, workoutHasExercise  :=
+    //        workouts \/ {workout},
+    //        workoutHasCategory \/ {workout |-> categoryWr},
+    //        workoutHasExercise \/ {workout}*dom(exercisesInWorkout |> {TRUE})
     
     // PROVAS OK (acho)
     removeWorkout(workout) = 
@@ -207,10 +247,10 @@ OPERATIONS
     END;
     
     // PROVAS OK (acho)
-    addExercise(exercise, category) = 
+    addExercise(exercise, categoryEx) = 
     BEGIN
         r_exercises(exercise) := TRUE;
-        r_exerciseHasCategory(exercise) := category;
+        r_exerciseHasCategory(exercise) := categoryEx;
         
         // !workoutx r_workoutHasExercise(workoutx,exercise) = FALSE
         VAR ww IN
@@ -246,7 +286,7 @@ OPERATIONS
         // !workoutx log(workoutx) <=> r_clientWorkedOut(client, workoutx)
         VAR log, ww IN
             ww := 0;
-            log := WORKOUT*{FALSE}; 
+            log := (0..14)*{FALSE}; 
             
             WHILE ww <= r_maximumWorkout DO
                 log(ww) := r_clientWorkedOut(client, ww);
@@ -264,23 +304,11 @@ OPERATIONS
             workoutLog := log
         END
     END;
-    //    PRE 
-    //         client : CLIENT
-    //        & client : clients
-    //        & client /= NULL
-    //        & clientWorkedOut[{client}] : FIN(clientWorkedOut[{client}])
-    //    THEN 
-    //        ANY log 
-    //                WHERE log : WORKOUT --> BOOL 
-    //                    & dom(log |> {TRUE}) = clientWorkedOut[{client}] 
-    //                THEN workoutLog := log
-    //        END
-    //    END;
     
     //        clientsWithSolicitation <-- getClientsWithWorkoutSolicitations = skip;
-   
+    
     defineClientWorkouts(client, workoutPush, workoutPull, workoutLeg) = skip
-
+    
 END
 // add client ok
 // remove client ok
@@ -288,8 +316,9 @@ END
 // add exercise ok
 // remove exercise ok
 // askForWorkout ok
+// ?????: getWorkoutLog code generation
+
 
 // TODO: add workout
-// TODO: getWorkoutLog
 // TODO: getClientsWithWorkoutSolicitations
 // TODO: defineClientWorkouts

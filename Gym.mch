@@ -29,9 +29,9 @@ CONSTANTS
     SZE_CATEGORY
     
 PROPERTIES
-    maxClients = 100
+    maxClients = 15
     & maxWorkouts = 15
-    & maxExercises = 30
+    & maxExercises = 15
     
     & maxExercisesInWorkout = 7
     & maxWorkoutsInHistory = 40
@@ -48,12 +48,16 @@ PROPERTIES
     & SZE_EXERCISE : NAT1 & SZE_EXERCISE >= 2 & SZE_EXERCISE < MAXINT
     & SZE_CATEGORY : NAT1 & SZE_CATEGORY = 3
     
+    & SZE_CLIENT = 15
+    & SZE_WORKOUT = 15
+    & SZE_EXERCISE = 15
+    
     & PUSH = 0 & PULL = 1 & LEGS = 2
     
     & CLIENT = 0..(SZE_CLIENT-1)
     & WORKOUT = 0..(SZE_WORKOUT-1)
     & EXERCISE = 0..(SZE_EXERCISE-1)
-//    & CATEGORY = {PUSH, PULL, LEGS}
+    //    & CATEGORY = {PUSH, PULL, LEGS}
     & CATEGORY = 0..(SZE_CATEGORY-1)
     
     & PUSH : CATEGORY & PULL : CATEGORY & LEGS : CATEGORY
@@ -164,35 +168,27 @@ OPERATIONS
         {client} <<| isClientNew
     END;
     
-//     TODO: exercisesInWorkout NULL
-//     TODO?: analisar se retirada de numOfExercisesInWorkout esta ok
-//            addWorkout(workout, category, numOfExercisesInWorkout, exercisesInWorkout) =
-//            addWorkout(workout, category, exercisesInWorkout) =
-//            PRE workout : WORKOUT & category : CATEGORY 
-//    //            & numOfExercisesInWorkout : NAT1
-//    //            & numOfExercisesInWorkout <= maxExercisesInWorkout
-//    //            & numOfExercisesInWorkout > 0
-//                & workouts : FIN(workouts)
-//                & workout /: workouts
-//                & card(workouts) < maxWorkouts
-//                // ------ typing exercisesInWorkout init ------ 
-//                & exercisesInWorkout : EXERCISE --> BOOL
-//    //            & exercisesInWorkout : 0..(maxExercisesInWorkout -1) --> EXERCISE
-//    //            & 
-//                & dom(exercisesInWorkout |> {TRUE}) <: exercises // todos os exs ja estao cadastrados
-//                & exercisesInWorkout |> {TRUE} : FIN(exercisesInWorkout |> {TRUE})
-//                & card(exercisesInWorkout |> {TRUE}) <= maxExercisesInWorkout
-//    //            & ran(exercisesInWorkout) : FIN(ran(exercisesInWorkout))
-//    //            & exercisesInWorkout : FIN(exercisesInWorkout)
-//    //            & card(exercisesInWorkout |> {TRUE}) =  numOfExercisesInWorkout // tamanho de exercisesInWorkout eh numOfExercisesInWorkout
-//                & !ex . ( ex : EXERCISE & ex : dom(exercisesInWorkout |> {TRUE}) => exerciseHasCategory(ex) = category) // todo ex em exercisesInWorkout tem a mesma categoria que o workout tera
-//                // ------ typing exercisesInWorkout end ------
-//                
-//            THEN workouts, workoutHasCategory, workoutHasExercise  :=
-//                workouts \/ {workout},
-//                workoutHasCategory \/ {workout |-> category},
-//                workoutHasExercise \/ {workout}*dom(exercisesInWorkout |> {TRUE})
-//            END;
+
+    // PROVAS OK (acho)
+    // tive que deixar "hard coded o tamanho de exercisedInWorkout pq de outras formas o Atelier B reclama"
+    addWorkout(workout, categoryWr, exercisesInWorkout) =
+    PRE workout : WORKOUT & categoryWr : CATEGORY 
+        & workout /: workouts
+        & card(workouts) < maxWorkouts
+        
+        // ------ typing exercisesInWorkout init ------ 
+        & exercisesInWorkout : 0..14 --> BOOL
+        & dom(exercisesInWorkout |> {TRUE}) <: exercises // todos os exs ja estao cadastrados
+        & exercisesInWorkout |> {TRUE} : FIN(exercisesInWorkout |> {TRUE})
+        & card(exercisesInWorkout |> {TRUE}) <= maxExercisesInWorkout
+        & !ex . ( ex : EXERCISE & ex : dom(exercisesInWorkout |> {TRUE}) => exerciseHasCategory(ex) = categoryWr) // todo ex em exercisesInWorkout tem a mesma categoria que o workout
+        // ------ typing exercisesInWorkout end ------
+        
+    THEN workouts, workoutHasCategory, workoutHasExercise  :=
+        workouts \/ {workout},
+        workoutHasCategory \/ {workout |-> categoryWr},
+        workoutHasExercise \/ {workout}*dom(exercisesInWorkout |> {TRUE})
+    END;
     
     
     removeWorkout(workout) =
@@ -206,15 +202,15 @@ OPERATIONS
     END;
     
     
-    addExercise(exercise, category) =
+    addExercise(exercise, categoryEx) =
     PRE exercise : EXERCISE
-        & category : CATEGORY
+        & categoryEx : CATEGORY
         & exercises : FIN(exercises)
         & exercise /: exercises
         & exercise /= NULL
         & card(exercises) < maxExercises
     THEN exercises := exercises \/ {exercise}
-        || exerciseHasCategory := exerciseHasCategory \/ {exercise|-> category}
+        || exerciseHasCategory := exerciseHasCategory \/ {exercise|-> categoryEx}
     END;
     
     
@@ -237,18 +233,19 @@ OPERATIONS
     
     workoutLog <-- getWorkoutLog(client) =
     PRE 
-         client : CLIENT
+        client : CLIENT
         & client : clients
         & client /= NULL
         & clientWorkedOut[{client}] : FIN(clientWorkedOut[{client}])
-        & workoutLog : WORKOUT --> BOOL
+//        & workoutLog : WORKOUT --> BOOL
     THEN 
         ANY log 
-                WHERE log : WORKOUT --> BOOL 
-                    & dom(log |> {TRUE}) = clientWorkedOut[{client}] 
-                THEN workoutLog := log
+//        WHERE log : WORKOUT --> BOOL 
+        WHERE log : 0..14 --> BOOL
+            & dom(log |> {TRUE}) = clientWorkedOut[{client}] 
+        THEN workoutLog := log
         END
-//workoutLog := % workoutLog.(workoutLog : WORKOUT | bool(workoutLog:clientWorkedOut[{client}]))
+        //workoutLog := % workoutLog.(workoutLog : WORKOUT | bool(workoutLog:clientWorkedOut[{client}]))
     END;
     
     // PROVAS OK (Leo)
