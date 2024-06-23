@@ -280,6 +280,22 @@ OPERATIONS
         & dom(list |> {TRUE}) <: CLIENT
         & dom(list |> {TRUE}) = clients
     THEN listClients := list
+    END;
+    
+    listExercises <-- getExercises =
+    ANY list 
+    WHERE list : NAT --> BOOL
+        & dom(list |> {TRUE}) <: EXERCISE
+        & dom(list |> {TRUE}) = exercises
+    THEN listExercises := list
+    END;
+    
+    listWorkouts <-- getWorkouts =
+    ANY list 
+    WHERE list : NAT --> BOOL
+        & dom(list |> {TRUE}) <: WORKOUT
+        & dom(list |> {TRUE}) = workouts
+    THEN listWorkouts := list
     END
     
 END

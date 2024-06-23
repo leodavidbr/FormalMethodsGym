@@ -379,6 +379,48 @@ OPERATIONS
                 r_maximumClient - cc +2
             END
         END
+    END;
+    
+    listExercises <-- getExercises = 
+    BEGIN
+        // !exercisex listExercises(exercisex) = r_exercises(exercisex)
+        VAR cc IN
+            cc := 0;
+            WHILE cc <= r_maximumExercise DO
+                listExercises(cc) := r_exercises(cc);
+                cc := cc + 1
+            INVARIANT
+                cc : 0..(r_maximumExercise +1)
+                & r_exercises : CLIENT --> BOOL
+                & listExercises : NAT --> BOOL
+                & dom(listExercises |> {TRUE}) <: CLIENT
+                & !exercisex. (exercisex : 0..(cc-1) 
+                    => listExercises(exercisex) = r_exercises(exercisex))
+            VARIANT
+                r_maximumExercise - cc +2
+            END
+        END
+    END;
+    
+    listWorkouts <-- getWorkouts = 
+    BEGIN
+        // !workoutx listWorkouts(workoutx) = r_workouts(workoutx)
+        VAR cc IN
+            cc := 0;
+            WHILE cc <= r_maximumWorkout DO
+                listWorkouts(cc) := r_workouts(cc);
+                cc := cc + 1
+            INVARIANT
+                cc : 0..(r_maximumWorkout +1)
+                & r_workouts : CLIENT --> BOOL
+                & listWorkouts : NAT --> BOOL
+                & dom(listWorkouts |> {TRUE}) <: CLIENT
+                & !workoutx. (workoutx : 0..(cc-1) 
+                    => listWorkouts(workoutx) = r_workouts(workoutx))
+            VARIANT
+                r_maximumWorkout - cc +2
+            END
+        END
     END
     
 END
