@@ -170,14 +170,13 @@ OPERATIONS
     
     
     // PROVAS OK (acho)
-    // tive que deixar "hard coded o tamanho de exercisedInWorkout pq de outras formas o Atelier B reclama"
+    // array de entrada tem certas complexidades...
     addWorkout(workout, categoryWr, exercisesInWorkout) =
     PRE workout : WORKOUT & categoryWr : CATEGORY 
         & workout /: workouts
         & card(workouts) < maxWorkouts
         
         // ------ typing exercisesInWorkout init ------ 
-        //        & exercisesInWorkout : 0..14 --> BOOL
         & exercisesInWorkout : NAT --> BOOL
         & dom(exercisesInWorkout |> {TRUE}) <: EXERCISE
         & dom(exercisesInWorkout |> {TRUE}) <: exercises // todos os exs ja estao cadastrados
@@ -313,8 +312,8 @@ END
 
 
 // MARCEL:
-// cwi : CLIENT*WORKOUT --> 
-// Cwi |> {true} = cw
+// cwi : CLIENT*WORKOUT --> BOOL
+// dom(Cwi |> {true}) = cw
 
 // 05
 // Nas interfaces da maquina, quando tiver um "conjunto". Melhor fazer como 

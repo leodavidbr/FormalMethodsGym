@@ -35,6 +35,8 @@ CONCRETE_VARIABLES
     
     
 INVARIANT
+    
+    // --- CONJUNTOS --- //
     r_clients : CLIENT --> BOOL 
     & clients = dom(r_clients |> {TRUE}) 
     &
@@ -44,6 +46,9 @@ INVARIANT
     r_exercises: EXERCISE --> BOOL 
     & exercises = dom(r_exercises |> {TRUE})
     &
+    
+    // --- FUNCOES --- ///
+    
     r_exerciseHasCategory : EXERCISE --> CATEGORY 
     & !ex. ((ex : EXERCISE & ex : exercises) => 
         (r_exerciseHasCategory(ex) = exerciseHasCategory(ex)))
@@ -59,6 +64,8 @@ INVARIANT
     r_isClientNew : CLIENT --> BOOL
     & !cl. ((cl : CLIENT & cl : clients) 
         => (r_isClientNew(cl) = isClientNew(cl)))
+    
+    // --- RELACOES --- //
     
     & 
     r_clientHasWorkout : CLIENT * WORKOUT --> BOOL
@@ -84,10 +91,10 @@ INVARIANT
             UNION(ex).(ex : EXERCISE & ex : exercises & r_workoutHasExercise(wr, ex) = TRUE | {ex}) ) )
     
     // Outras formas de ligar as relacoes que pensei:
-    // Forma 01
-    //    r_clientWorkedOut : CLIENT * WORKOUT --> BOOL 
-    //    & !(cl, wr) .( (cl : CLIENT & wr : WORKOUT & cl : clients) 
-    //        => ( wr : clientWorkedOut[{cl}] <=> (r_clientWorkedOut(cl,wr) = TRUE) ) )
+//     Forma 01
+//        r_clientWorkedOut : CLIENT * WORKOUT --> BOOL 
+//        & !(cl, wr) .( (cl : CLIENT & wr : WORKOUT & cl : clients) 
+//            => ( wr : clientWorkedOut[{cl}] <=> (r_clientWorkedOut(cl,wr) = TRUE) ) )
     //
     // Forma 02
     //    r_clientWorkedOut : CLIENT * WORKOUT --> BOOL 
