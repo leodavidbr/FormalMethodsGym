@@ -327,7 +327,7 @@ OPERATIONS
                 END
             END;
     
-    defineClientWorkouts(client, workoutPush, workoutPull, workoutLeg) = skip
+    defineClientWorkouts(client, wr1, wr2, wr3) = skip
     
 END
 // add client ok

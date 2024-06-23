@@ -257,21 +257,18 @@ OPERATIONS
     END;
     
     // PROVAS OK (Leo)
-    // TODO: Seria bom tirar a parte de maxWorkoutsInHistory da precondição e colocar como if no THEN
-        defineClientWorkouts(client, workoutPush, workoutPull, workoutLeg) =
+        defineClientWorkouts(client, wr1, wr2, wr3) =
         PRE client : CLIENT & client : clients & client /= NULL
             & clientHasSolicitation(client) = TRUE
-            & workoutPush : WORKOUT & workoutPull : WORKOUT & workoutLeg : WORKOUT
-            & workoutPush /= NULL & workoutPull /= NULL & workoutLeg /= NULL
-            & workoutPush : workouts & workoutHasCategory[{workoutPush}] = {PUSH}
-            & workoutPull : workouts & workoutHasCategory[{workoutPull}] = {PULL}
-            & workoutLeg : workouts & workoutHasCategory[{workoutLeg}] = {LEGS}
-            & workoutPush /= workoutPull & workoutPull /= workoutLeg & workoutPush /= workoutLeg  // redundante
+            & wr1 : WORKOUT & wr2 : WORKOUT & wr3 : WORKOUT
+            & wr1 /= NULL & wr2 /= NULL & wr3 /= NULL
+            & wr1 : workouts & wr2 : workouts & wr3 : workouts
+            & workoutHasCategory[{wr1,wr2,wr3}] = CATEGORY
             & clientWorkedOut \/ {client} * clientHasWorkout[{client}] : FIN(clientWorkedOut \/ {client} * clientHasWorkout[{client}])
 //            & card(clientWorkedOut \/ {client} * clientHasWorkout[{client}]) < maxWorkoutsInHistory
             
         THEN  clientHasWorkout, clientWorkedOut, clientHasSolicitation, isClientNew := 
-            clientHasWorkout <+ ({client} * {workoutPush, workoutPull, workoutLeg}), 
+            clientHasWorkout <+ ({client} * {wr1, wr2, wr3}), 
             clientWorkedOut \/ ({client} * clientHasWorkout[{client}]),
             clientHasSolicitation <+ {client |-> FALSE},
             isClientNew <+ {client |-> FALSE}
