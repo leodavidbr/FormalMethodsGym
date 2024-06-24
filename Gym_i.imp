@@ -312,14 +312,19 @@ OPERATIONS
         VAR cc IN
             cc := 0;
             WHILE cc <= r_maximumClient DO
-                clientsWithSolicitation(cc) := r_clientHasSolicitation(cc);
+                VAR ccInClient IN
+                    ccInClient := r_clients(cc);
+                    IF (ccInClient = TRUE) THEN
+                        clientsWithSolicitation(cc) := r_clientHasSolicitation(cc)
+                    END
+                END;
                 cc := cc + 1
             INVARIANT
                 cc : 0..(r_maximumClient +1)
                 & r_clientHasSolicitation : CLIENT --> BOOL
                 & clientsWithSolicitation : NAT --> BOOL
                 & dom(clientsWithSolicitation |> {TRUE}) <: CLIENT
-                & !clientx. (clientx : 0..(cc-1) 
+                & !clientx. (clientx : 0..(cc-1) & r_clients(clientx) = TRUE
                     => clientsWithSolicitation(clientx) = r_clientHasSolicitation(clientx))
             VARIANT
                 r_maximumClient - cc +2
@@ -339,9 +344,9 @@ OPERATIONS
             WHILE ww <= r_maximumWorkout DO
                 VAR clHasWr IN
                     clHasWr := r_clientHasWorkout(client, ww);
-                IF (clHasWr = TRUE) THEN
-                    r_clientWorkedOut(client, ww) := TRUE
-                END
+                    IF (clHasWr = TRUE) THEN
+                        r_clientWorkedOut(client, ww) := TRUE
+                    END
                 END;
                 ww := ww + 1
             INVARIANT
