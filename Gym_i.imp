@@ -316,6 +316,8 @@ OPERATIONS
                     ccInClient := r_clients(cc);
                     IF (ccInClient = TRUE) THEN
                         clientsWithSolicitation(cc) := r_clientHasSolicitation(cc)
+                    ELSE
+                       clientsWithSolicitation(cc) := FALSE
                     END
                 END;
                 cc := cc + 1
@@ -324,8 +326,9 @@ OPERATIONS
                 & r_clientHasSolicitation : CLIENT --> BOOL
                 & clientsWithSolicitation : NAT --> BOOL
                 & dom(clientsWithSolicitation |> {TRUE}) <: CLIENT
-                & !clientx. (clientx : 0..(cc-1) & r_clients(clientx) = TRUE
-                    => clientsWithSolicitation(clientx) = r_clientHasSolicitation(clientx))
+                & !clientx. (clientx : 0..(cc-1) 
+                    => (r_clients(clientx) = TRUE => clientsWithSolicitation(clientx) = r_clientHasSolicitation(clientx)) 
+                            &  (r_clients(clientx) = FALSE => clientsWithSolicitation(clientx) = FALSE))
             VARIANT
                 r_maximumClient - cc +2
             END
