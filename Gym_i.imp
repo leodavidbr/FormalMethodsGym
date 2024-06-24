@@ -440,11 +440,11 @@ OPERATIONS
                 VAR wwInWorkouts IN
                     wwInWorkouts := r_workouts(ww);
                     IF (wwInWorkouts = TRUE) THEN
-                        listWorkouts(ww) := r_clientHasWorkout(client, ww);
-                        ww := ww + 1
+                        listWorkouts(ww) := r_clientHasWorkout(client, ww)
                     ELSE
                         listWorkouts(ww) := FALSE
-                    END
+                    END;
+                    ww := ww + 1
                 END
             INVARIANT
                 ww : 0..(r_maximumWorkout +1)
@@ -453,7 +453,7 @@ OPERATIONS
                 & dom(listWorkouts |> {TRUE}) <: WORKOUT
                 & !workoutx. (workoutx : 0..(ww-1) 
                     => (r_workouts(workoutx) = TRUE => listWorkouts(workoutx) = r_clientHasWorkout(client, workoutx)) 
-                            &(r_workouts(workoutx) = FALSE => listWorkouts(workoutx) = FALSE ))
+                    &(r_workouts(workoutx) = FALSE => listWorkouts(workoutx) = FALSE ))
             VARIANT
                 r_maximumWorkout - ww +2
             END
