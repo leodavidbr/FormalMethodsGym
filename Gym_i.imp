@@ -317,7 +317,7 @@ OPERATIONS
                     IF (ccInClient = TRUE) THEN
                         clientsWithSolicitation(cc) := r_clientHasSolicitation(cc)
                     ELSE
-                       clientsWithSolicitation(cc) := FALSE
+                        clientsWithSolicitation(cc) := FALSE
                     END
                 END;
                 cc := cc + 1
@@ -328,7 +328,7 @@ OPERATIONS
                 & dom(clientsWithSolicitation |> {TRUE}) <: CLIENT
                 & !clientx. (clientx : 0..(cc-1) 
                     => (r_clients(clientx) = TRUE => clientsWithSolicitation(clientx) = r_clientHasSolicitation(clientx)) 
-                            &  (r_clients(clientx) = FALSE => clientsWithSolicitation(clientx) = FALSE))
+                    &  (r_clients(clientx) = FALSE => clientsWithSolicitation(clientx) = FALSE))
             VARIANT
                 r_maximumClient - cc +2
             END
@@ -437,15 +437,23 @@ OPERATIONS
         VAR ww IN
             ww := 0;
             WHILE ww <= r_maximumWorkout DO
-                listWorkouts(ww) := r_clientHasWorkout(client, ww);
-                ww := ww + 1
+                VAR wwInWorkouts IN
+                    wwInWorkouts := r_workouts(ww);
+                    IF (wwInWorkouts = TRUE) THEN
+                        listWorkouts(ww) := r_clientHasWorkout(client, ww);
+                        ww := ww + 1
+                    ELSE
+                        listWorkouts(ww) := FALSE
+                    END
+                END
             INVARIANT
                 ww : 0..(r_maximumWorkout +1)
                 & r_clientHasWorkout : CLIENT * WORKOUT --> BOOL
                 & listWorkouts : NAT --> BOOL
                 & dom(listWorkouts |> {TRUE}) <: WORKOUT
                 & !workoutx. (workoutx : 0..(ww-1) 
-                    => listWorkouts(workoutx) = r_clientHasWorkout(client, workoutx))
+                    => (r_workouts(workoutx) = TRUE => listWorkouts(workoutx) = r_clientHasWorkout(client, workoutx)) 
+                            &(r_workouts(workoutx) = FALSE => listWorkouts(workoutx) = FALSE ))
             VARIANT
                 r_maximumWorkout - ww +2
             END
