@@ -582,7 +582,7 @@ void showCurrentWorkoutClient() {
 }
 
 void mostrarMenu() {
-    std::cout << "Menu de Opções:" << std::endl;
+    std::cout << "------------ Menu de Opções: -------------" << std::endl;
     std::cout << "1. Adicionar cliente" << std::endl;
     std::cout << "2. Mostrar clientes" << std::endl;
     std::cout << "3. Remover cliente" << std::endl;
@@ -598,6 +598,7 @@ void mostrarMenu() {
     std::cout << "13. Mostrar histórico de treinos do cliente" << std::endl;
     std::cout << "14. Mostrar treino atual do cliente" << std::endl;
     std::cout << "0. Sair" << std::endl;
+    std::cout << "--------------------------------------------" << std::endl;
 }
 
 int main() {
